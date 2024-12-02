@@ -1,0 +1,31 @@
+{
+  "name": "intex",
+  "version": "1.0.0",
+  "description": "This is the INTEX solution for Group 4-8 for the Turtle Shelter Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/phatch21/intex.git"
+  },
+  "keywords": [
+    "INTEX",
+    "Turtle",
+    "Shelter",
+    "Project"
+  ],
+  "author": "Vin Jones, Zach Katzenbach, Spencer Bullock, Payton Hatch",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/phatch21/intex/issues"
+  },
+  "homepage": "https://github.com/phatch21/intex#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.1",
+    "knex": "^3.1.0",
+    "pg": "^8.13.1"
+  }
+}
