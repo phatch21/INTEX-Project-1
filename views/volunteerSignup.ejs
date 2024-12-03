@@ -2,71 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="styles.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Volunteer Signup</title>
-    <style>
-        /* Hide the "I am willing to teach" field by default */
-        #teach-container {
-            display: none;
-            margin-left: 20px; /* Adjust as needed to align neatly */
-        }
-        /* Style the container to keep related checkboxes aligned */
-        .checkbox-container {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-    </style>
     <script>
         function toggleTeachCheckbox() {
             const canSew = document.getElementById("cansew").checked;
             const teachContainer = document.getElementById("teach-container");
+            const willTeach = document.getElementById("willteach");
 
-            // Show or hide the "I am willing to teach" checkbox based on "I can sew"
+            // Show or hide the "Will you teach" checkbox container
             teachContainer.style.display = canSew ? "block" : "none";
+
+            // Uncheck "Will you teach" checkbox if "Can you sew" is unchecked
+            if (!canSew) {
+                willTeach.checked = false;
+            }
         }
     </script>
 </head>
 <body>
-    <form action="/addVolunteer" method="POST">
-        <label for="firstname">Enter your first name:</label>
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <div class="logo">Turtle Shelter<br>Project</div>
+        <nav class="nav-links">
+            <a href="#">Jen's Story</a>
+            <a href="#">Sponsors</a>
+            <a href="#">About</a>
+            <a href="#">Donations</a>
+        </nav>
+    </header>
+
+    <form action="/addVolunteer" method="POST" class="form-container">
+        <h1>Volunteer Signup</h1>
+        <label for="firstname">First Name</label>
         <input type="text" id="firstname" name="firstname" required>
-        <br><br>
-        <label for="lastname">Enter your last name:</label>
+
+        <label for="lastname">Last Name</label>
         <input type="text" id="lastname" name="lastname" required>
-        <br><br>
-        <label for="email">Enter your email:</label>
+
+        <label for="email">Email Address</label>
         <input type="email" id="email" name="email" required>
-        <br><br>
-        <label for="phone">Enter your phone number:</label>
+
+        <label for="phone">Phone Number</label>
         <input type="text" id="phone" name="phone" placeholder="(123) 456-7890" required>
-        <br><br>
-        <label for="willinghours">How many hours are you willing to volunteer for an event?</label>
+
+        <label for="willinghours">Volunteer Hours</label>
         <input type="number" id="willinghours" name="willinghours" min="1" max="40">
-        <br><br>
-        <label for="heardhow">How did you hear about the Turtle Shelter Project?</label>
-        <input type="text" id="heardhow" name="heardhow" placeholder="e.g., Social media, friend, etc." required>
-        <br><br>
+
+        <label for="heardhow">How Did You Hear About Us?</label>
+        <input type="text" id="heardhow" name="heardhow" placeholder="Social media, friend, etc." required>
+
         <div class="checkbox-container">
-            <label>
-                <input type="checkbox" id="cansew" name="cansew" onchange="toggleTeachCheckbox()" value="true">
-                I can sew
+            <label for="cansew">Do you know how to sew? Yes or No 
+            <input type="checkbox" id="cansew" name="cansew" onchange="toggleTeachCheckbox()" value="true">
             </label>
-            <div id="teach-container">
-                <label>
-                    <input type="checkbox" id="willteach" name="willteach" value="true">
-                    I am willing to teach others how to sew
+
+            <div id="teach-container" class="hidden">
+                <label for="willteach">Would you be willing to teach others how to sew? Yes or No 
+                <input type="checkbox" id="willteach" name="willteach" value="true">
                 </label>
             </div>
-            <label>
-                <input type="checkbox" id="havemachine" name="havemachine" value="true">
-                I have a sewing machine
+
+            <label for="havemachine">Do you own a sewing machine and can bring it to events? <br>Yes or No 
+            <input type="checkbox" id="havemachine" name="havemachine" value="true">
             </label>
         </div>
-        <br><br>
-        <button type="submit">Submit</button>
+        
+        <button type="submit" class="lead-button">Submit</button>
     </form>
+    <br><br><br><br><br><br><br><br>
 </body>
 </html>
+
 
 
