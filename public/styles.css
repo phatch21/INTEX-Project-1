@@ -1,0 +1,126 @@
+/* Reset and global styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body, html {
+    font-family: Arial, sans-serif;
+    color: #333;
+    height: 100%;
+  }
+  
+  /* Navigation Bar */
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    z-index: 1000;
+  }
+  
+  .logo {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  
+  .nav-links a {
+    text-decoration: none;
+    color: #333;
+    margin: 0 10px;
+    font-size: 1rem;
+  }
+  
+  .nav-links a:hover {
+    color: #007BFF;
+  }
+  
+  /* Lead Section */
+  .lead-section {
+    height: calc(100vh - 60px); /* Adjust for nav height */
+    background: url('test.jpg') center center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    position: relative;
+    padding-top: 60px; /* Offset for fixed nav */
+  }
+  
+  .lead-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); /* Overlay effect */
+  }
+  
+  .lead-content {
+    position: relative;
+    z-index: 10;
+  }
+  
+  .lead-content h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .lead-content p {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+  }
+  
+  .lead-button {
+    background: #007BFF;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  .lead-button:hover {
+    background: #0056b3;
+  }
+  
+  /* Footer */
+  .footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #f8f8f8;
+    text-align: center;
+    padding: 25px;
+    border-top: 1px solid #ccc;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .nav-links a {
+      font-size: 0.9rem;
+    }
+  
+    .lead-content h1 {
+      font-size: 2rem;
+    }
+  
+    .lead-content p {
+      font-size: 1rem;
+    }
+  
+    .lead-button {
+      font-size: 0.9rem;
+      padding: 8px 16px;
+    }
+  }
+  
