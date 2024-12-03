@@ -80,7 +80,7 @@
   }
   
   .lead-button {
-    background: #007BFF;
+    background: #1c8e00;
     color: #fff;
     border: none;
     padding: 10px 20px;
@@ -90,7 +90,7 @@
   }
   
   .lead-button:hover {
-    background: #0056b3;
+    background: #156b00;
   }
   
   /* Footer */
@@ -123,4 +123,105 @@
       padding: 8px 16px;
     }
   }
-  
+
+    /* Hide the "I am willing to teach" field by default */
+    #teach-container {
+      display: none;
+      margin-left: 20px; /* Adjust as needed to align neatly */
+  }
+  /* Style the container to keep related checkboxes aligned */
+  .checkbox-container {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+  }
+
+  /* Ensure body content starts below the header */
+body {
+  margin: 0; /* Remove default margin */
+  padding: 0;
+}
+
+header.navbar {
+  position: sticky; /* Keep the header at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure it stays above other content */
+  background-color: #f4f4f4; /* Header background color */
+  padding: 10px 20px;
+}
+
+/* Add spacing for content below the header */
+form {
+  margin-top: 100px; /* Push form content below the fixed header */
+  padding: 20px; /* Optional: Add some padding for better aesthetics */
+}
+/*YOU ALSO CHANGED THE COLOR REMEMBER THAT
+
+/* General Styling */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff;
+}
+
+/* Form Styling */
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+  text-align: center;
+  color: #333;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 1rem;
+  display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.checkbox-container {
+  margin-top: 1rem;
+}
+
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+.hidden {
+  display: none;
+}
+
+button.lead-button {
+  background-color: #1c8e00;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  display: block;
+  margin: 2rem auto 0;
+}
+
+button.lead-button:hover {
+  background-color: #156b00;
+}
