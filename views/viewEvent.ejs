@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>View Event</title>
+  <style>
+    form {
+      width: 50%;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      background-color: #F9F9F9;
+      font-size: 12px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    input[type="checkbox"], input[type="radio"] {
+      width: auto;
+      margin-right: 5px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #45A049;
+    }
+  </style>
+  <script>
+    function toggleVolunteerInput() {
+      const status = document.getElementById('eventstatus').value;
+      const volunteerInput = document.getElementById('volunteerInput');
+      const participantsRealInput = document.getElementById('participantsRealInput');
+      const volunteersRealInput = document.getElementById('volunteersRealInput');
+      const numvoluntestInput = document.getElementById('numvoluntest');
+
+      if (status === 'approved') {
+        volunteerInput.style.display = 'block';  // Show the volunteer input when status is 'approved'
+        numvoluntestInput.readOnly = false;      // Make numvoluntest editable
+        participantsRealInput.style.display = 'none';  // Hide the actual attendance/volunteers fields
+        volunteersRealInput.style.display = 'none';
+      } else if (status === 'complete') {
+        volunteerInput.style.display = 'block';  // Show the volunteer input when status is 'complete'
+        numvoluntestInput.readOnly = true;       // Make numvoluntest read-only
+
+        participantsRealInput.style.display = 'block';  // Show the real participants fields
+        volunteersRealInput.style.display = 'block';
+        
+        // Make the new fields editable
+        participantsRealInput.querySelector('input').readOnly = false;
+        volunteersRealInput.querySelector('input').readOnly = false;
+      } else {
+        volunteerInput.style.display = 'none';   // Hide the volunteer input for other statuses
+        participantsRealInput.style.display = 'none';
+        volunteersRealInput.style.display = 'none';
+      }
+    }
+  </script>
+</head>
+<body>
+  <h1 style="text-align: center;">View Event</h1>
+  <form action="/viewEvent/<%= event.eventid %>" method="POST">
+
+    <!-- Event Name (Read-only) -->
+    <label for="eventname">Event Name</label>
+    <input type="text" id="eventname" name="eventname" value="<%= event.eventname %>" readonly>
+
+    <!-- Organizer Information -->
+    <label for="organizer_name">Organizer Name</label>
+    <input type="text" id="organizer_name" name="organizer_name" value="<%= event.firstname %> <%= event.lastname %>" readonly>
+
+    <label for="organizer_phone">Organizer Phone</label>
+    <input type="text" id="organizer_phone" name="organizer_phone" value="<%= event.phone %>" readonly>
+
+    <label for="organizer_email">Organizer Email</label>
+    <input type="email" id="organizer_email" name="organizer_email" value="<%= event.email %>" readonly>
+
+    <!-- Schedule Information -->
+    <label for="event_date">Event Date</label>
+    <input type="text" id="event_date" name="event_date" value="<%=event.event_date %>" readonly>
+
+    <label for="start_time">Start Time</label>
+    <input type="text" id="start_time" name="start_time" value="<%= event.start_time %>" readonly>
+
+    <label for="end_time">End Time</label>
+    <input type="text" id="end_time" name="end_time" value="<%=event.end_time%>" readonly>
+
+    <!-- Location Information -->
+    <label for="address">Address</label>
+    <input type="text" id="address" name="address" value="<%= event.address %>, <%= event.city %>, <%= event.state %> <%= event.zip %>" readonly>
+
+    <!-- Estimated Attendance -->
+    <label for="estattendance">Estimated Attendance</label>
+    <input type="number" id="estattendance" name="estattendance" value="<%= event.estattendance %>" readonly>
+
+    <div id="volunteerInput" style="display: <%= event.eventstatus === 'approved' || event.eventstatus === 'complete' ? 'block' : 'none' %>;">
+      <label for="numvoluntest">Estimated Volunteers Needed</label>
+      <input type="number" id="numvoluntest" name="numvoluntest" value="<%= event.numvoluntest %>" readonly />
+    </div>
+
+    <!-- New fields for real attendance and volunteers -->
+    <div id="participantsRealInput" style="display: <%= event.eventstatus === 'complete' ? 'block' : 'none' %>;">
+      <label for="participantsreal">Actual Participants</label>
+      <input type="number" id="participantsreal" name="participantsreal" value="<%= event.participantsreal %>" />
+    </div>
+
+    <div id="volunteersRealInput" style="display: <%= event.eventstatus === 'complete' ? 'block' : 'none' %>;">
+      <label for="volunteersreal">Actual Volunteers</label>
+      <input type="number" id="volunteersreal" name="volunteersreal" value="<%= event.volunteersreal %>" />
+    </div>
+
+    <label for="eventstatus">Event Status</label>
+    <select id="eventstatus" name="eventstatus" onchange="toggleVolunteerInput()">
+      <option value="requested" <%= event.eventstatus === 'requested' ? 'selected' : '' %>>Requested</option>
+      <option value="approved" <%= event.eventstatus === 'approved' ? 'selected' : '' %>>Approved</option>
+      <option value="complete" <%= event.eventstatus === 'complete' ? 'selected' : '' %>>Complete</option>
+    </select>
+
+    <!-- Submit Button -->
+    <button type="submit">Save Changes</button>
+  </form>
+</body>
+</html>
+
+
+
+
+
+
