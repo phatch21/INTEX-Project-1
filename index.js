@@ -109,6 +109,26 @@ app.get('/createAdmin', isAuthenticated, (req, res) => {
     res.render('createAdmin');
 });
 
+app.get('/eventOrganizers', (req, res) => {
+    knex('organizer')
+      .select(
+        'organizer.organizerid',
+        'organizer.firstname',
+        'organizer.lastname',
+        'organizer.email',
+        'organizer.phone'
+      )
+      .then(organizers => {
+        // Render the eventOrganizers.ejs template and pass the data
+        res.render('eventOrganizers', { organizers });
+      })
+      // allow it to die gracefully
+      .catch(error => {
+        console.error('Error querying database:', error);
+        res.status(500).send('Internal Server Error');
+      });
+  });
+
 app.post('/createAdmin', async (req, res) => {
     try {
         const hashedPassword = await hashPassword(req.body.password); // Hash the password
