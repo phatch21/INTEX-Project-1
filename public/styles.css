@@ -40,6 +40,42 @@ body {
   max-height: 100%; /* Fit logo height */
 }
 
+.logo {
+  display: flex;
+  align-items: center; /* Align image and text vertically */
+  gap: 10px; /* Space between image and text */
+  text-decoration: none; /* Remove any text decoration like underline */
+}
+
+.logo img {
+  max-height: 50px; /* Adjust height as needed */
+  width: auto; /* Maintain aspect ratio */
+}
+
+.logo span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333; /* Set a fixed text color */
+  transition: none; /* Prevent color change on hover or focus */
+}
+
+/* Prevent text color change on hover */
+.logo:hover span,
+.logo:focus span {
+  color: #333; /* Ensure it stays the same */
+}
+
+.logo a {
+  text-decoration: none; /* Remove underline */
+  color: #333; /* Fix text color */
+}
+
+.logo a:visited,
+.logo a:hover,
+.logo a:active {
+  color: #333; /* Ensure consistent color for all states */
+}
+
 .nav-links a {
   text-decoration: none;
   color: #333;
