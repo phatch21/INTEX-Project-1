@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Admin</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h1 style="text-align: center;">Create New Admin</h1>
+    <form action="/createAdmin" method="POST" class="form-container">
+        <label for="fname" >Enter your first name:</label>
+        <input type="text" id="fname" name="fname" >
+        <br><br>
+        <label for="lname" >Enter your last name:</label>
+        <input type="text" id="lname" name="lname">
+        <br><br>
+        <label for="username" >Create a unique username:</label>
+        <input type="text" id="username" name="username" >
+        <br><br>
+        <label for="password" >Create a secure password:</label>
+        <input type="password" id="password" name="password">
+        <br><br>
+        <button type="submit" >Create User</button>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edit Admin</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1 style="text-align: center;">Edit Admin</h1>
+  <form class="form-container" action="/editAdmin/<%= admins.admin_id %>" method="POST">
+    <!-- First Name -->
+    <label for="fname">First Name</label>
+    <input type="text" id="fname" name="fname" value="<%= admins.fname %>" required>
+    <!-- Last Name -->
+    <label for="lname">Last Name</label>
+    <input type="text" id="lname" name="lname" value="<%= admins.lname %>" required>
+    <!-- Username -->
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" value="<%= admins.username %>" required>
+    <!-- Submit Button -->
+    <button type="submit">Save Changes</button>
+  </form>
+</body>
+</html>
