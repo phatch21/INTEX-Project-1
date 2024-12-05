@@ -271,7 +271,9 @@ app.post('/addVolunteer', (req, res) => {
         res.status(500).send('Internal Server Error');
     });
 });
-
+app.get('/faqs', (req, res) => {
+    res.render('faqs');
+});
 // Gets the event request page
 app.get('/eventRequest', (req, res) => {
     res.render('eventRequest');
