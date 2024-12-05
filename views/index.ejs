@@ -6,7 +6,6 @@
   <title>Landing Page</title>
   <link rel="stylesheet" href="styles.css">
   <link rel="icon" href="logo2.png" type="image/png">
-
 </head>
 <body>
   <!-- Navigation Bar -->
@@ -16,66 +15,59 @@
     <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
   </a>
     <nav class="nav-links">
-      <a href="#jensStory">JEN'S STORY</a>
-      <a href="#sponsors">SPONSORS</a>
-      <a href="#about">ABOUT</a>
-      <a href="#donations">DONATIONS</a>
+      <a href="/jensStory">JEN'S STORY</a>
+      <a href="/sponsors">SPONSORS</a>
+      <a href="/about">ABOUT</a>
+      <a href="/donations">DONATIONS</a>
     </nav>
     <div class="hamburger-icon" id="hamburger-icon">
       ☰
     </div>
   </header>
   <div id="dropdown-menu" class="dropdown hidden">
-    <a href="#jensStory">JEN'S STORY</a>
-    <a href="#sponsors">SPONSORS</a>
-    <a href="#about">ABOUT</a>
-    <a href="#donations">DONATIONS</a>
+    <a href="/jensStory">JEN'S STORY</a>
+    <a href="/sponsors">SPONSORS</a>
+    <a href="/about">ABOUT</a>
+    <a href="/donations">DONATIONS</a>
   </div>
+  
 
   <!-- Lead Section -->
   <section class="lead-section">
     <div class="lead-content">
-      <p>Saving the lives of people experiencing homelessness</p>
-      <h1>STARTS WITH YOU</h1>
-      <img src="logo.png" alt="Logo" class="lead-logo">
-      <br><br><br>
+        <p>Saving the lives of people experiencing homelessness</p>
+        <h1>STARTS WITH YOU</h1>
     </div>
-  </section>
+</section>
+
 
   <section class="action-buttons">
-    <div class="side-by-side">
-        <div class="content-box" 
-             style="background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 95%), url('volunteers1.jpg'); 
-                    background-size: cover; 
-                    background-position: center; 
-                    background-repeat: no-repeat;
-                    height: 40vh;">
-            <p>Our insulating technology can keep people warm, and you can help!</p>
-            <a href="/addVolunteer" class="lead-button" style="text-decoration: none;">Volunteer for an Event</a>
+      <div class="side-by-side">
+        <div class="content-box volunteer-event" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 40vh; text-align: center;">
+          <p style="align-self: flex-start; margin-top: 10px; color: white; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); font-size: 1.2rem;">
+              Our insulating vests can keep people warm, and you can help!
+          </p>
+          <a href="/addVolunteer" style="margin-top: auto; text-decoration: none; padding: 10px 20px; font-size: 1rem; font-weight: bold; background-color: #5cb85c; color: white; border-radius: 4px; display: inline-block;">
+              Volunteer for an Event
+          </a>
         </div>
-        <div class="content-box" 
-             style="background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1) 95%), url('volunteers7.jpg'); 
-                    background-size: cover; 
-                    background-position: center; 
-                    background-repeat: no-repeat;
-                    height: 40vh;">
-            <p>Organize an event for a group of any size!</p>
-            <a href="/eventRequest" class="lead-button" style="text-decoration: none;">Host an Event</a>
-        </div>
-    </div>   
-  </section>
 
-  <div>
-    <p>Life-threatening hypothermia can set in between 32&deg;F to 50&deg;F, so the Turtle Shelter Project has one goal: eliminate the threat of hypothermia for homeless individuals by offering them a Turtle Shelter Vest that can insulate against the cold, even when wet!</p>
-  </div>
-  <p>Extra info here<br><br><br><br><br><br><br><br><br>Extra Info Here</p>
+        <div class="content-box host-event" style="display: flex; flex-direction: column; justify-content: space-between; align-items: center; height: 40vh; text-align: center;">
+          <p style="align-self: flex-start; margin-top: 10px; color: white; text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); font-size: 1.2rem;">
+            Organize an event for a group of any size!
+          </p>
+          <a href="/eventRequest" class="lead-button" style="margin-top: auto; text-decoration: none; padding: 10px 20px; font-size: 1rem; font-weight: bold; background-color: #5cb85c; color: white; border-radius: 4px; display: inline-block;">
+            Host an Event
+          </a>
+        </div>
+      </div>
+  </section>
 
   <!-- Footer -->
   <footer class="footer">
     <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
-    <br>
     <p>PO Box 382, Kaysville, UT 84037 -- 801-872-3190 -- <a href="mailto:turtleshelterproject@gmail.com">turtleshelterproject@gmail.com</a></p>
   </footer>
-<script src="hamburger.js"></script>
+
 </body>
 </html>

@@ -17,15 +17,15 @@
       margin: 0;
       padding: 0;
     }
-
-
+ 
+ 
     /* Sponsor Section */
     .sponsor-section {
       display: flex;
       justify-content: center;
       padding: 40px 20px;
     }
-
+ 
     .sponsor-card {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -37,7 +37,7 @@
       max-width: 1200px;
       width: 100%;
     }
-
+ 
     .sponsor-title {
       font-size: 18px;
       font-weight: 500;
@@ -45,7 +45,7 @@
       margin-bottom: 10px;
       text-align: center;
     }
-
+ 
     /* New Heading for the Sponsors Section */
     .sponsor-card h1 {
       grid-column: span 4;
@@ -55,7 +55,7 @@
       color: #333;
       margin-bottom: 30px;
     }
-
+ 
     .sponsor {
       display: flex;
       flex-direction: column;
@@ -66,7 +66,7 @@
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
       height: 100%;
     }
-
+ 
     .sponsor img {
       max-width: 100%;
       max-height: 150px;
@@ -77,11 +77,11 @@
       padding: 10px;
       transition: transform 0.3s ease-in-out;
     }
-
+ 
     .sponsor img:hover {
       transform: scale(1.05);
     }
-
+ 
     /* Ensures bottom row images are spaced the same as the top row */
     .bottom-row {
       display: grid;
@@ -89,7 +89,7 @@
       grid-column: span 4;
       gap: 20px;
     }
-
+ 
     .bottom-row .sponsor {
       display: flex;
       flex-direction: column;
@@ -99,7 +99,7 @@
       border-radius: 8px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
-
+ 
     .footer {
       text-align: center;
       font-size: 14px;
@@ -108,7 +108,7 @@
       border-top: 1px solid #ddd;
       background-color: #f8f8f8;
     }
-
+ 
     /* Mobile Responsiveness */
     @media screen and (max-width: 768px) {
       .sponsor-card {
@@ -118,7 +118,7 @@
         grid-template-columns: 1fr 1fr;
       }
     }
-
+ 
     @media screen and (max-width: 480px) {
       .sponsor-card {
         grid-template-columns: 1fr;
@@ -131,7 +131,7 @@
 </head>
 <body>
     <script src="hamburger.js"></script>
-
+ 
   <!-- Navigation Bar -->
    <!-- Navigation Bar -->
    <header class="navbar">
@@ -142,7 +142,7 @@
     <nav class="nav-links">
       <a href="/jensStory">JEN'S STORY</a>
       <a href="/sponsors">SPONSORS</a>
-      <a href="/tech">ABOUT</a>
+      <a href="/about">ABOUT</a>
       <a href="/donations">DONATIONS</a>
     </nav>
     <div class="hamburger-icon" id="hamburger-icon">
@@ -152,16 +152,16 @@
   <div id="dropdown-menu" class="dropdown hidden">
     <a href="/jensStory">JEN'S STORY</a>
     <a href="/sponsors">SPONSORS</a>
-    <a href="/tech">ABOUT</a>
+    <a href="/about">ABOUT</a>
     <a href="/donations">DONATIONS</a>
   </div>
-
+ 
   <!-- Sponsor Section -->
   <section class="sponsor-section">
     <div class="sponsor-card">
       <!-- Title for the Sponsors Section -->
       <h1>Our Sponsors</h1>
-
+ 
       <!-- Top Row -->
       <div class="sponsor">
         <a href="https://www.cheneybrothersconstruction.com/" target="_blank">
@@ -187,7 +187,7 @@
         </a>
         <div class="sponsor-title">Future Foam</div>
       </div>
-
+ 
       <!-- Bottom Row -->
       <div class="bottom-row">
         <div class="sponsor">
@@ -212,12 +212,16 @@
     </div>
   </section>
 
+  <div class="sponsor">
+    <p style="text-align: center;"><br>The Turtle Shelter Project provides hundreds of life-saving vests every year.<br>Want to help us in our mission? See how you can <a href="mailto:turtleshelterproject@gmail.com?subject=Becoming%20a%20Sponsor&body=Hi,%20I%20want%20to%20become%20a%20sponsor.">become a sponsor</a>.<br><br></p>
+  </div>
+ 
   <!-- Footer -->
   <footer class="footer">
     <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
     <br>
     <p>PO Box 382, Kaysville, UT 84037 -- 801-872-3190 -- <a href="mailto:turtleshelterproject@gmail.com">turtleshelterproject@gmail.com</a></p>
   </footer>
-
+ 
 </body>
 </html>

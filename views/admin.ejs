@@ -13,7 +13,7 @@
             position: relative;
             padding-top: 20px;
         }
-
+ 
         /* Style for the top left and right containers (Admin and Event cards) */
         .card-container {
             width: 50%;
@@ -21,7 +21,7 @@
             padding: 20px;
             box-sizing: border-box;
         }
-
+ 
         /* Common card styling */
         .card {
             border: 3px solid #ccc;
@@ -35,7 +35,7 @@
             justify-content: center; /* Center content vertically */
             align-items: center; /* Center content horizontally */
         }
-
+ 
         /* Styling for the Tableau dashboard */
         .dashboard-container {
             width: 100%;
@@ -47,18 +47,18 @@
             overflow: hidden;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
+ 
         /* Ensure proper layout of forms inside cards */
         form {
             width: 100%; /* Full width to ensure button alignment */
             text-align: center; /* Center button inside the form */
         }
-
+ 
         form button {
             width: 80%; /* Adjust button width for better alignment */
             max-width: 250px; /* Maximum width for buttons */
         }
-
+ 
         form button:hover {
             background-color: #45a049;
         }
@@ -66,37 +66,37 @@
 </head>
 <body>
     <header class="navbar">
-        <a class="logo" href='/'>
+        <a class="logo" href='/admin'>
             <img src="logo2.png" alt="Logo">
           <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
         </a>
         <nav class="nav-links">
-            <form action="/admin" method="GET" style="display: inline;">
+            <!-- <form action="/admin" method="GET" style="display: inline;">
                 <a href="#" onclick="this.closest('form').submit();">Control Panel</a>
             </form>
             <a href="#"> View Event Request Form</a>
             <form action="/maintainAdmin" method="GET" style="display: inline;">
                 <a href="#" onclick="this.closest('form').submit();">Manage Admins</a>
-            </form>
+            </form> -->
             <!-- Logout as an 'a' tag -->
             <form action="/logout" method="POST" style="display: inline;">
                 <a href="#" onclick="this.closest('form').submit();" style="color: rgb(212, 19, 19); text-decoration: none; padding: 10px; cursor: pointer;">Logout</a>
             </form>
         </nav>
     </header>
-    
-
+   
+ 
         <!-- Function to capitalize first letter -->
         <%
         function capitalizeFirstLetter(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
         }
         %>
-
+ 
     <!-- Displays Welcome with the name of the admin -->
     <br>
     <h1 style="text-align: center;">Welcome, <%= capitalizeFirstLetter(loggedInAdmin.fname.toLowerCase()) %>!</h1>
-
+ 
     <main class="main-container">
         <!-- Left Container for Admin Actions (Card) -->
         <div class="card-container">
@@ -112,22 +112,22 @@
                 </form>
             </div>
         </div>
-
+ 
         <!-- Right Container for Event Actions (Card) -->
         <div class="card-container">
             <div class="card">
                 <h2>Events</h2>
                 <br>
-                <form action="/viewEventRequest" method="GET">
+                <form action="/displayEvents" method="GET">
                     <button type="submit">View Event Request Form</button>
                 </form>
                 <br>
-                <form action="/viewEventOrganizers" method="GET">
+                <form action="/eventOrganizers" method="GET">
                     <button type="submit">View Event Organizers</button>
                 </form>
             </div>
         </div>
-
+ 
         <!-- Tableau Dashboard Section -->
         <h1 style="text-align: center;">Dashboard</h1>
         <div class="dashboard-container">
@@ -154,7 +154,7 @@
                 </object>
             </div>
         </div>
-
+ 
         <script type='text/javascript'>
             var divElement = document.getElementById('viz1733338362206');
             var vizElement = divElement.getElementsByTagName('object')[0];

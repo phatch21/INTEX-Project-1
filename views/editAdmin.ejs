@@ -7,43 +7,41 @@
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
+
   <header class="navbar">
-    <a class="logo" href='/'>
-      <img src="logo2.png" alt="Logo">
-    <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
-  </a>
+    <a class="logo" href='/admin'>
+        <img src="logo2.png" alt="Logo">
+      <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
+    </a>
     <nav class="nav-links">
-        <form action="/admin" method="GET" style="display: inline;">
+        <!-- <form action="/admin" method="GET" style="display: inline;">
             <a href="#" onclick="this.closest('form').submit();">Control Panel</a>
         </form>
         <a href="#"> View Event Request Form</a>
         <form action="/maintainAdmin" method="GET" style="display: inline;">
             <a href="#" onclick="this.closest('form').submit();">Manage Admins</a>
-        </form>
+        </form> -->
         <!-- Logout as an 'a' tag -->
         <form action="/logout" method="POST" style="display: inline;">
             <a href="#" onclick="this.closest('form').submit();" style="color: rgb(212, 19, 19); text-decoration: none; padding: 10px; cursor: pointer;">Logout</a>
         </form>
     </nav>
 </header>
+<br>
 
   <h1 style="text-align: center;">Edit Admin</h1>
-  <form class="form-container" action="/editAdmin/<%= admins.admin_id %>" method="POST">
+  <form class="form-container" action="/editAdmin/<%= admin.admin_id %>" method="POST">
     <!-- First Name -->
     <label for="fname">First Name</label>
-    <input type="text" id="fname" name="fname" value="<%= admins.fname %>" required>
+    <input type="text" id="fname" name="fname" value="<%= admin.fname %>" required>
     <!-- Last Name -->
     <label for="lname">Last Name</label>
-    <input type="text" id="lname" name="lname" value="<%= admins.lname %>" required>
+    <input type="text" id="lname" name="lname" value="<%= admin.lname %>" required>
     <!-- Username -->
     <label for="username">Username</label>
-    <input type="text" id="username" name="username" value="<%= admins.username %>" required>
+    <input type="text" id="username" name="username" value="<%= admin.username %>" required>
     <!-- Submit Button -->
     <button type="submit">Save Changes</button>
   </form>
-
-  <footer class="footer">
-    <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
-    <br></footer>
 </body>
 </html>

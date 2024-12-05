@@ -1,53 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="styles.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Request</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="logo.png" type="image/png">
 </head>
-<body>
-<!-- Navigation Bar -->
+<body class="volunteer-signup-page">
+  <!-- Navigation Bar -->
   <header class="navbar">
-    <a class="logo" href='/'>
-      <img src="logo2.png" alt="Logo">
-    <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
-  </a>
-    <nav class="nav-links">
-      <a href="#jensStory">JEN'S STORY</a>
-      <a href="#sponsors">SPONSORS</a>
-      <a href="#about">ABOUT</a>
-      <a href="#donations">DONATIONS</a>
-    </nav>
-    <div class="hamburger-icon" id="hamburger-icon">
-      ☰
-    </div>
+      <a class="logo" href="/">
+          <img src="logo2.png" alt="Logo">
+          <div style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
+      </a>
+      <nav class="nav-links">
+          <a href="/jensStory">JEN'S STORY</a>
+          <a href="/sponsors">SPONSORS</a>
+          <a href="/about">ABOUT</a>
+          <a href="/donations">DONATIONS</a>
+      </nav>
+      <div class="hamburger-icon" id="hamburger-icon">
+          ☰
+      </div>
   </header>
   <div id="dropdown-menu" class="dropdown hidden">
-    <a href="#jensStory">JEN'S STORY</a>
-    <a href="#sponsors">SPONSORS</a>
-    <a href="#about">ABOUT</a>
-    <a href="#donations">DONATIONS</a>
+      <a href="/jensStory">JEN'S STORY</a>
+      <a href="/sponsors">SPONSORS</a>
+      <a href="/about">ABOUT</a>
+      <a href="/donations">DONATIONS</a>
   </div>
-    <br>
-    <p><b>Please note:</b><br>Depending on demand, you may need to request your event 5 to 6 months in advance.</p>
-    <br>
-    <form action="/addEventRequest" method="POST" enctype="multipart/form-data">
+
+  <form action="/eventRequest" method="POST" class="form-container">
+      <h1>Event Request</h1>
+      <br>
+      <p><b>Please note: Depending on demand, you may need to request your event 5 to 6 months in advance.</b></p>
         <label for="fname">Enter your first name:</label>
         <input type="text" id="fname" name="fname" required>
-        <br>
+        <br><br>
         <label for="lname">Enter your last name:</label>
         <input type="text" id="lname" name="lname" required>
-        <br>
+        <br><br>
         <label for="email">Enter your email:</label>
-        <input type="email" id="email" name="email" required>
-        <br>
+        <input type="email" id="email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}" required>
+        <br><br>
         <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" pattern="\d{3}[-.\s]?\d{3}[-.\s]?\d{4}" placeholder="123-456-7890" required>
-        <br>
+        <input type="tel" id="phone" name="phone" pattern="\d{3}-\d{3}-\d{4}" placeholder="123-456-7890" required>
+        <br><br>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" required>
+        <br><br>
         <label for="city">City:</label>
         <input type="text" id="city" name="city" required>
-        <br>
+        <br><br>
         <label for="state">State:</label>
         <select id="state" name="state" required>
             <option value="AL">Alabama</option>
@@ -101,80 +106,126 @@
             <option value="WI">Wisconsin</option>
             <option value="WY">Wyoming</option>
             <option value="DC">District of Columbia</option>
-          </select>
-        <br>
+          </select>          
+        <br><br>
         <label for="zip">Zip Code:</label>
         <input type="text" id="zip" name="zip" maxlength="10" pattern="\d{5}(-\d{4})?" placeholder="12345 or 12345-6789" required>
-        <br>
+        <br><br>
         <label for="eventname">Name of Event:</label>
         <input type="text" id="eventname" name="eventname" required>
-        <br>
+        <br><br>
         <label for="activity">Type of Activity:</label>
-        <select id="eventname" name="eventname" required>
+        <select id="activity" name="activity" required>
             <option value="sewing">Sewing</option>
             <option value="non-sewing">Non-Sewing</option>
             <option value="fundraiser">Fundraiser</option>
             <option value="donation-drive">Donation Drive</option>
         </select>
-        <br>
+        <br><br>
         <label for="jenstory">Do you want Jen to tell her story?</label>
         <select id="jenstory" name="jenstory" required>
             <option value="no">No</option>
             <option value="short">Shorter Version</option>
             <option value="full">Full Version</option>
         </select>
-        <br>
+        <br><br>
+        <label for="estNumAttendance">Estimated Number of Volunteers:</label>
+        <input type="number" id="estNumAttendance" name="estNumAttendance" min="1" required>
+        <br><br>
         <label for="numDates">Number of days event will run for:</label>
-        <input type="number" id="numDates" min="1" max="7">
+        <input type="number" id="numDates" name="numDates" min="1" max="7" value="1" required>
+        <br><br>
         <div id="dynamicFields"></div>
+        <br>
         <button type="submit">Submit</button>
     </form>
 
     <script>
-        const numDatesInput = document.getElementById('numDates');
-        const dynamicFieldsContainer = document.getElementById('dynamicFields');
+      document.addEventListener('DOMContentLoaded', () => {
+      const numDatesInput = document.getElementById('numDates');
+      const dynamicFieldsContainer = document.getElementById('dynamicFields');
 
-        numDatesInput.addEventListener('input', () => {
-          // Clear the dynamic fields container
-          dynamicFieldsContainer.innerHTML = '';
+      // Function to create dynamic fields
+      const createFields = (numDays) => {
+        // Clear the dynamic fields container
+        dynamicFieldsContainer.innerHTML = '';
 
-          // Get the number of days entered by the user
-          const numDays = parseInt(numDatesInput.value, 10);
+        // Validate input
+        if (isNaN(numDays) || numDays < 1 || numDays > 7) {
+          numDays = 1; // Default to at least one day
+        }
 
-          // Validate input
-          if (isNaN(numDays) || numDays < 1 || numDays > 7) {
-            return; // Exit if invalid
+        // Create dynamic fields
+        for (let i = 1; i <= numDays; i++) {
+          // Date input
+          const dateLabel = document.createElement('label');
+          dateLabel.setAttribute('for', `date${i}`);
+          dateLabel.textContent = `Date ${i}:`;
+          dynamicFieldsContainer.appendChild(dateLabel);
+
+          const dateInput = document.createElement('input');
+          dateInput.setAttribute('type', 'date');
+          dateInput.setAttribute('id', `date${i}`);
+          dateInput.setAttribute('name', `date${i}`);
+          dateInput.required = true;
+          dynamicFieldsContainer.appendChild(dateInput);
+
+          if (i === 1) {
+            // Add an event listener to populate subsequent dates
+            dateInput.addEventListener('change', () => {
+              const startDate = new Date(dateInput.value);
+              for (let j = 2; j <= numDays; j++) {
+                const nextDateInput = document.getElementById(`date${j}`);
+                if (nextDateInput) {
+                  const nextDate = new Date(startDate);
+                  nextDate.setDate(startDate.getDate() + (j - 1)); // Increment date
+                  nextDateInput.value = nextDate.toISOString().split('T')[0];
+                }
+              }
+            });
           }
 
-          // Create dynamic fields
-          for (let i = 1; i <= numDays; i++) {
-            const dateLabel = document.createElement('label');
-            dateLabel.setAttribute('for', `date${i}`);
-            dateLabel.textContent = `Date ${i}:`;
-            dynamicFieldsContainer.appendChild(dateLabel);
+          // Start time input
+          const startTimeLabel = document.createElement('label');
+          startTimeLabel.setAttribute('for', `startTime${i}`);
+          startTimeLabel.textContent = ` Start Time:`;
+          dynamicFieldsContainer.appendChild(startTimeLabel);
 
-            const dateInput = document.createElement('input');
-            dateInput.setAttribute('type', 'date');
-            dateInput.setAttribute('id', `date${i}`);
-            dateInput.setAttribute('name', `date${i}`);
-            dynamicFieldsContainer.appendChild(dateInput);
+          const startTimeInput = document.createElement('input');
+          startTimeInput.setAttribute('type', 'time');
+          startTimeInput.setAttribute('id', `startTime${i}`);
+          startTimeInput.setAttribute('name', `startTime${i}`);
+          startTimeInput.required = true;
+          dynamicFieldsContainer.appendChild(startTimeInput);
 
-            const durationLabel = document.createElement('label');
-            durationLabel.setAttribute('for', `duration${i}`);
-            durationLabel.textContent = ` Duration (hours):`;
-            dynamicFieldsContainer.appendChild(durationLabel);
+          // End time input
+          const endTimeLabel = document.createElement('label');
+          endTimeLabel.setAttribute('for', `endTime${i}`);
+          endTimeLabel.textContent = ` End Time:`;
+          dynamicFieldsContainer.appendChild(endTimeLabel);
 
-            const durationInput = document.createElement('input');
-            durationInput.setAttribute('type', 'number');
-            durationInput.setAttribute('id', `duration${i}`);
-            durationInput.setAttribute('name', `duration${i}`);
-            durationInput.setAttribute('min', '1');
-            durationInput.setAttribute('max', '24');
-            dynamicFieldsContainer.appendChild(durationInput);
+          const endTimeInput = document.createElement('input');
+          endTimeInput.setAttribute('type', 'time');
+          endTimeInput.setAttribute('id', `endTime${i}`);
+          endTimeInput.setAttribute('name', `endTime${i}`);
+          endTimeInput.required = true;
+          dynamicFieldsContainer.appendChild(endTimeInput);
 
-            dynamicFieldsContainer.appendChild(document.createElement('br')); // Add line break for spacing
-          }
-        });
-      </script>
-<script src="hamburger.js"></script>
+          // Add a line break for spacing
+          dynamicFieldsContainer.appendChild(document.createElement('br'));
+        }
+      };
+
+      // Run on page load to create at least one set of inputs
+      createFields(1);
+
+      // Update fields dynamically based on user input for `numDates`
+      numDatesInput.addEventListener('input', () => {
+        const numDays = parseInt(numDatesInput.value, 10);
+        createFields(numDays);
+      });
+    });
+    </script>    
+  
 </body>
+</html>

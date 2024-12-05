@@ -1,26 +1,26 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     const hamburgerIcon = document.getElementById('hamburger-icon');
     const dropdownMenu = document.getElementById('dropdown-menu');
-  
+
     const toggleDropdown = () => {
-      dropdownMenu.classList.toggle('hidden');
+    if (window.innerWidth <= 768) {
+        dropdownMenu.classList.toggle('hidden');
+    }
     };
-  
-    const hideDropdown = () => {
-      dropdownMenu.classList.add('hidden'); // Ensure dropdown is hidden
+
+    const resetDropdown = () => {
+    if (window.innerWidth > 768) {
+        dropdownMenu.classList.add('hidden'); // Ensure dropdown is hidden
+    }
     };
-  
-    // Toggle dropdown menu on hamburger click
+
+    // Toggle dropdown menu on click
     hamburgerIcon.addEventListener('click', toggleDropdown);
-  
-    // Hide dropdown menu when scrolling
-    window.addEventListener('scroll', hideDropdown);
-  
-    // Optional: Reset dropdown visibility on resize
-    window.addEventListener('resize', () => {
-      if (window.innerWidth > 768) {
-        hideDropdown();
-      }
-    });
-  });
-  
+
+    // Ensure dropdown is reset when resizing to larger screens
+    window.addEventListener('resize', resetDropdown);
+
+    // Initial reset for larger screens
+    resetDropdown();
+});

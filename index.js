@@ -1,6 +1,8 @@
 const express = require("express");
 const session = require('express-session');
 const bcrypt = require('bcrypt');
+const speakeasy = require('speakeasy');
+const qrcode = require('qrcode');
 const app = express();
 let path = require("path");
 const port = process.env.PORT || 3000;
@@ -34,9 +36,9 @@ function isAuthenticated(req, res, next) {
 const knex = require("knex")({
     client: "pg", // Define the database client (PostgreSQL in this case).
     connection: { // Database connection details.
-        host: process.env.RDS_HOSTNAME || "localhost", // Host where the PostgreSQL server is running.
+        host: process.env.RDS_HOSTNAME || "localhost",//"awseb-e-vfbtv3p32z-stack-awsebrdsdatabase-jjafz3q7a3js.cv2g6ywg6824.us-east-1.rds.amazonaws.com", 
         user: process.env.RDS_USERNAME || "postgres", // PostgreSQL user with access to the database.
-        password: process.env.RDS_PASSWORD || "supersecretpassword", // Password for the PostgreSQL user.
+        password: process.env.RDS_PASSWORD || "matt3j145367",//"supersecretpassword", // Password for the PostgreSQL user.
         database: process.env.RDS_DB_NAME || "ebdb", // Database name.
         port: process.env.RDS_PORT || 5432, // Default port for PostgreSQL.
         ssl: process.env.DB_SSL ? {rejectUnauthorized : false} : false
@@ -63,29 +65,52 @@ app.get("/", (req, res) => {
 
 // Login route
 app.get('/login', (req, res) => {
+    req.session.isLoggedIn = false;
     res.render('login');
 });
 
 // Handling a login POST request
 app.post('/login', async (req, res) => {
+    //const { token } = req.body; // The TOTP token entered by the user
     const username = req.body.username;
     const password = req.body.password; // Plain-text password from the user
-
+    const token = req.body.token;
+ 
     try {
         // Fetch the admin user from the database
-        const admin = await knex.select("username", "password")
-            .from("admin")
-            .where("username", username)
+        const admin = await knex.select('admin_id', 'username', 'password', 'fname', 'secret') // Include 'admin_id' and 'fname'
+            .from('admin')
+            .where('username', username)
             .first();
-
+ 
         if (admin) {
             // Use bcrypt.compare() to check the password
             const isPasswordMatch = await bcrypt.compare(password, admin.password);
-            
+
+            // Step 2: Validate the TOTP token
+            const isTokenValid = speakeasy.totp.verify({
+                secret: admin.secret, // TOTP secret stored in the database
+                encoding: 'base32',
+                token, // The TOTP token provided by the user
+                window: 1, // Allow for slight clock drift
+            });
+
+            if (!isTokenValid) {
+                return res.status(401).json({ error: 'Invalid TOTP token.' });
+            }
+           
             if (isPasswordMatch) {
                 // Password matches, log in the user
                 req.session.isLoggedIn = true;
-                res.redirect('/admin'); // Redirect to the admin page
+ 
+                // Store the admin's ID and first name in the session for later use
+                req.session.admin = {
+                    admin_id: admin.admin_id,
+                    fname: admin.fname
+                };
+
+                // Redirect to the admin page
+                res.redirect('/admin');
             } else {
                 // Password doesn't match
                 res.status(401).send('Invalid username or password');
@@ -100,45 +125,92 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.post('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).send('Failed to log out');
+        }
+        // Redirect to the login page or home page after logging out
+        res.redirect('/'); // Adjust this as needed
+    });
+});
+
+// Route to generate a TOTP secret
+app.get('/generate-secret', (req, res) => {
+    res.render('generate-secret');
+});
+
+app.post('/generate-secret', async (req, res) => {
+    try {
+        const username = req.body.username;
+
+        console.log("Username received:", username); // Log the username
+
+        if (!username) {
+            return res.status(400).json({ error: "Username is required." });
+        }
+
+        // Query the database
+        const result = await knex('admin')
+            .select('secret')
+            .where('username', username)
+            .first();
+
+        if (!result || !result.secret) {
+            return res.status(404).json({ error: "No secret found for the provided username." });
+        }
+
+        console.log("Secret fetched from database:", result.secret);
+
+        res.json({ secret: result.secret });
+    } catch (error) {
+        console.error('Error fetching secret:', error);
+        res.status(500).json({ error: 'Failed to fetch TOTP secret.' });
+    }
+});
+
 // Admin route protected by isAuthenticated middleware
 app.get('/admin', isAuthenticated, (req, res) => {
-    res.render('admin');
+    const admin = req.session.admin;
+   
+    knex('admin')
+        .select('admin_id', 'fname')
+        .then(admins => {
+            // Render the admin.ejs template and pass the admin data
+            res.render('admin', { admins, loggedInAdmin: admin });
+        })
+        .catch(error => {
+            console.error('Error querying database:', error);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
+app.get("/sponsors", (req, res) => {
+    res.render("sponsors");
 });
 
 app.get('/createAdmin', isAuthenticated, (req, res) => {
     res.render('createAdmin');
 });
 
-app.get('/eventOrganizers', (req, res) => {
-    knex('organizer')
-      .select(
-        'organizer.organizerid',
-        'organizer.firstname',
-        'organizer.lastname',
-        'organizer.email',
-        'organizer.phone'
-      )
-      .then(organizers => {
-        // Render the eventOrganizers.ejs template and pass the data
-        res.render('eventOrganizers', { organizers });
-      })
-      // allow it to die gracefully
-      .catch(error => {
-        console.error('Error querying database:', error);
-        res.status(500).send('Internal Server Error');
-      });
-  });
-
 app.post('/createAdmin', async (req, res) => {
     try {
         const hashedPassword = await hashPassword(req.body.password); // Hash the password
+
+        // Generate TOTP secret
+        const secret = speakeasy.generateSecret({ name: 'TurtleShelterProject' });
+
+        // Insert new admin into the database
         await knex("admin").insert({
             fname: req.body.fname.toUpperCase(),
             lname: req.body.lname.toUpperCase(),
             username: req.body.username,
-            password: hashedPassword // Store the hashed password
+            password: hashedPassword, // Store the hashed password
+            secret: secret.base32, // Store the TOTP secret
         });
-        res.redirect('/maintainAdmin');
+
+        // Redirect to the admin control panel
+        res.redirect('/generate-secret');
     } catch (err) {
         console.error('Database Error:', err);
         res.status(500).json({ error: 'Failed to insert admin into database.' });
@@ -151,9 +223,8 @@ app.get('/maintainAdmin', isAuthenticated, (req, res) => {
             'fname',
             'lname',
             'username',
-            'adminid'
+            'admin_id'
         )
-       
         //returns all the records as an ARRAY of ROWS
         .then(admins => {
             // Render the index.ejs template and pass the data
@@ -201,10 +272,127 @@ app.post('/addVolunteer', (req, res) => {
     });
 });
 
+// Gets the event request page
 app.get('/eventRequest', (req, res) => {
     res.render('eventRequest');
 });
 
+// Posts the event request page to the database
+app.post('/eventRequest', async (req, res) => {
+    const fname = req.body.fname
+    const lname = req.body.lname
+    const email = req.body.email
+    const phone = req.body.phone
+    const address = req.body.address
+    const city = req.body.city
+    const state = req.body.state
+    const zip = req.body.zip
+    const eventname = req.body.eventname
+    const activity = req.body.activity
+    const jenstory = req.body.jenstory
+    const estattendance = req.body.estattendance
+    const numDates = req.body.numDates
+
+    try {
+        // Step 1: Check if the organizer already exists, return organizerid
+        let organizer = await knex('organizer').where("email", req.body.email).first();
+        let organizerId;
+    
+        if (!organizer) {
+            // Insert new organizer and retrieve organizerid
+            const [newOrganizer] = await knex('organizer')
+                .insert({
+                    firstname: fname,
+                    lastname: lname,
+                    email: email,
+                    phone: phone
+                })
+                .returning('organizerid'); // Returns an array of the inserted rows
+            organizerId = newOrganizer.organizerid;
+        } else {
+            // Existing organizer found
+            organizerId = organizer.organizerid;
+        }
+    
+        // Step 2: Check if the location already exists
+        let location = await knex('location').where({ address, city, state, zip }).first();
+        let locationId;
+    
+        if (!location) {
+            // Insert new location and retrieve locationid
+            const [newLocation] = await knex('location')
+                .insert({
+                    address: address,
+                    city: city,
+                    state: state,
+                    zip: zip
+                })
+                .returning('locationid'); // Returns an array of the inserted rows
+            locationId = newLocation;
+        } else {
+            // Existing location found
+            locationId = location.locationid;
+        }
+    
+        // Step 3: Insert into the "event" table
+        const [eventId] = await knex('event')
+            .insert({
+                organizerid: organizerId,
+                locationid: locationId,
+                eventname: eventname,
+                eventstatus: 'Requested',
+                activity: activity,
+                jenstory: jenstory,
+                estattendance: estattendance || 0,
+                numvoluntest: 0,
+                participantsreal: null,
+                volunteersreal: null,
+            })
+            .returning('eventid');
+    
+        // Step 4: Insert into the "schedule" table for multiple dates
+        for (let i = 1; i <= numDates; i++) {
+            // Access the dynamic keys from req.body
+            const eventDateKey = `date${i}`;
+            const startTimeKey = `startTime${i}`;
+            const endTimeKey = `endTime${i}`;
+        
+            const eventDate = req.body[eventDateKey];
+            const startTime = req.body[startTimeKey];
+            const endTime = req.body[endTimeKey];
+        
+            // Validate and format the event date
+            let insertDate;
+            try {
+                insertDate = new Date(eventDate);
+                if (isNaN(insertDate)) throw new Error(`Invalid date: ${eventDate}`);
+                insertDate = insertDate.toISOString().split('T')[0]; // Format as YYYY-MM-DD
+            } catch (error) {
+                console.error(`Error processing date for ${eventDateKey}:`, error);
+                continue; // Skip this iteration for invalid dates
+            }
+        
+            // Insert the schedule entry
+            try {
+                await knex('schedule').insert({
+                    eventid: eventId.eventid, // Assuming eventId is an object with eventid property
+                    event_date: insertDate, // Already validated and formatted
+                    start_time: startTime, // Pass raw value; PostgreSQL will handle time format
+                    end_time: endTime, // Pass raw value; PostgreSQL will handle time format
+                });
+            } catch (error) {
+                console.error(`Error inserting schedule entry for date ${eventDateKey}:`, error);
+            }
+        }
+
+        res.redirect('/');
+    } catch (error) {
+        console.error('Error processing event request:', error);
+        res.status(500).send({ success: false, message: 'Internal Server Error' });
+    } 
+});
+
+// Gets the list of event organizers and displays
 app.get('/eventOrganizers', isAuthenticated, (req, res) => {
     knex('organizer')
       .select(
@@ -225,7 +413,7 @@ app.get('/eventOrganizers', isAuthenticated, (req, res) => {
       });
   });
 
-  //get info from databse so it shows up when edit it clicked
+//get info from databse so it shows up when edit is clicked
 app.get('/editAdmin/:admin_id', isAuthenticated, (req, res) => {
     const admin_id = parseInt(req.params.admin_id, 10);
     if (isNaN(admin_id)) {
@@ -234,11 +422,11 @@ app.get('/editAdmin/:admin_id', isAuthenticated, (req, res) => {
     knex('admin')
         .where('admin_id', admin_id)
         .first()
-        .then(admins => {
-            if (!admins) {
+        .then(admin => {
+            if (!admin) {
                 return res.status(404).send('Admin not found');
             }
-            res.render('editAdmin', { admins });
+            res.render('editAdmin', { admin });
         })
         .catch(error => {
             console.error('Error querying database:', error);
@@ -284,7 +472,7 @@ app.post('/deleteAdmin/:admin_id', (req, res) => {
     });
 });
 
-app.get('/requestedEvents', isAuthenticated, (req, res) => {
+app.get('/displayEvents', isAuthenticated, (req, res) => {
     knex('event')
         .select(
             'event.eventid',
@@ -302,12 +490,14 @@ app.get('/requestedEvents', isAuthenticated, (req, res) => {
         });
 });
  
-app.get('/viewEvent/:eventid', isAuthenticated, (req, res) => {
+app.get('/viewEvent/:eventid', (req, res) => {
     const eventid = req.params.eventid;
     knex('event')
         .join('schedule', 'event.eventid', '=', 'schedule.eventid')
         .join('location', 'event.locationid', '=', 'location.locationid')
         .join('organizer', 'event.organizerid', '=', 'organizer.organizerid')
+        .join('production', 'event.eventid', '=', 'production.eventid')
+        .join('items', 'items.itemnum', '=', 'production.itemnum')
         .select(
             'event.eventid',
             'event.eventname',
@@ -326,22 +516,186 @@ app.get('/viewEvent/:eventid', isAuthenticated, (req, res) => {
             'event.estattendance',
             'event.numvoluntest',
             'event.participantsreal',
-            'event.volunteersreal'
+            'event.volunteersreal',
+            'production.itemnum',
+            'production.numproduced',
+            'items.itemname',
+            'event.jenstory',
+            'event.activity',
+            'organizer.organizerid',
+            'event.locationid',
+            'production.productionid',
+            'items.itemname'
         )
         .where('event.eventid', eventid)
-        .first()  // Use .first() to get only the first matching result
-        .then(event => {
-            if (!event) {
-                return res.status(404).send('Event not found');  // Handle the case where no event is found
+        .then(eventData => {
+            if (!eventData || eventData.length === 0) {
+                return res.status(404).send('Event not found');
             }
-            const formattedDate = new Date(event.event_date).toISOString().split('T')[0];
  
-            res.render('viewEvent', { event: { ...event, event_date: formattedDate } });
+            // Remove duplicates from schedule dates by mapping and then using Set to filter them
+            const scheduleDetails = eventData
+            .map(row => ({
+                event_date: row.event_date,
+                start_time: row.start_time,
+                end_time: row.end_time
+            }))
+            .filter((value, index, self) =>
+                index === self.findIndex((t) => (
+                    t.event_date === value.event_date &&
+                    t.start_time === value.start_time &&
+                    t.end_time === value.end_time
+                ))
+            );
+ 
+            // Group production data by item name (itemtype) and remove duplicates for each item type
+            const itemProductions = eventData.reduce((acc, row) => {
+                if (!acc[row.itemname]) {
+                    acc[row.itemname] = [];
+                }
+                if (!acc[row.itemname].includes(row.numproduced)) {
+                    acc[row.itemname].push(row.numproduced);
+                }
+                return acc;
+            }, {});
+ 
+            res.render('viewEvent', {
+                event: {
+                    ...eventData[0],
+                    itemProductions,
+                    scheduleDetails  // Pass the schedule details (date, start time, end time) to the template
+                }
+            });
         })
         .catch(error => {
             console.error('Error querying database:', error);
             res.status(500).send('Internal Server Error');
         });
+});
+ 
+ 
+ 
+app.post('/viewEvent/:eventid', (req, res) => {
+    const eventid = req.params.eventid;
+    const eventname = req.body.eventname;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const phone = req.body.phone;
+    const email = req.body.email;
+    const address = req.body.address;
+    const city = req.body.city;
+    const state = req.body.state;
+    const zip = req.body.zip;
+    const activity = req.body.activity;
+    const jenstory = req.body.jenstory;
+    const estattendance = req.body.estattendance;
+    const numvoluntest = req.body.numvoluntest;
+    const participantsreal = req.body.participantsreal;
+    const volunteersreal = req.body.volunteersreal;
+    const eventstatus = req.body.eventstatus;
+    const organizerid = req.body.organizerid;
+    const locationid = req.body.locationid;
+    let itemnum = [];
+    itemnum.push(req.body.pockets);
+    itemnum.push(req.body.collars);
+    itemnum.push(req.body.envelopes);
+    itemnum.push(req.body.vestPiece);
+    itemnum.push(req.body.completedProduct);
+ 
+    console.log(itemnum);
+ 
+    // Update the event in the database
+    knex('event')
+        .where('event.eventid', eventid)  // Ensure correct column and value
+        .join('schedule', 'event.eventid', '=', 'schedule.eventid')
+        .join('location', 'event.locationid', '=', 'location.locationid')
+        .join('organizer', 'event.organizerid', '=', 'organizer.organizerid')
+        .join('production', 'event.eventid', '=', 'production.eventid')
+        .join('items', 'items.itemnum', '=', 'production.itemnum')
+        .update({
+            eventname: eventname,
+            activity: activity,
+            jenstory: jenstory,
+            estattendance: estattendance,
+            numvoluntest: numvoluntest,
+            participantsreal: participantsreal,
+            volunteersreal: volunteersreal,
+            eventstatus: eventstatus,
+        })
+        .then(() => {
+            // Step 2: Update the organizer table (only if `organizerid` exists)
+            return knex('organizer')
+                .where('organizer.organizerid', organizerid)  // Use organizerid from req.body
+                .update({
+                    firstname: firstname,
+                    lastname: lastname,
+                    phone: phone,
+                    email: email,
+                });
+        })
+        .then(() => {
+            // Step 3: Update the location table
+            return knex('location')
+                .where('location.locationid', locationid)
+                .update({
+                    address: address,
+                    city: city,
+                    state: state,
+                    zip: zip,
+                });
+        })
+        .then(() => {
+            // Step 4: Update the production table for each product
+            let updates = []; // Array to hold all promises
+            for (let iCount = 0; iCount < 5; iCount++) {
+                let iNum = iCount + 1;
+                updates.push(
+                    knex('production')
+                        .where('production.eventid', eventid)
+                        .andWhere('production.itemnum', iNum)
+                        .update({
+                            numproduced: itemnum[iCount]
+                        })
+                );
+            }
+ 
+            // Wait for all updates to complete
+            return Promise.all(updates)
+                .then(() => {
+                    console.log('All rows updated successfully!');
+                })
+                .catch(err => {
+                    console.error('Error updating rows:', err);
+                });
+        })         
+        .then(() => {
+            
+            res.redirect('/displayEvents'); // Redirect after successful update
+        })
+        .catch(error => {
+            console.error('Error updating Event:', error);
+            res.status(500).send('Internal Server Error');
+        });     
+});
+
+app.get('/jensStory', (req, res) => {
+    res.render('jensStory');
+});
+
+app.get('/about', (req, res) => {
+    res.render('about');
+});
+
+app.get('/vestsDistributed', (req, res) => {
+    res.render('vestsDistributed');
+});
+
+app.get('/sponsors', (req, res) => {
+    res.render('sponsors');
+});
+
+app.get('/donations', (req, res) => {
+    res.render('donations');
 });
 
 // Start the server

@@ -27,8 +27,32 @@
       cursor: pointer;
     }
   </style>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="logo2.png" type="image/png">
 </head>
+
 <body>
+  <header class="navbar">
+    <a class="logo" href='/admin'>
+        <img src="logo2.png" alt="Logo">
+      <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
+    </a>
+    <nav class="nav-links">
+        <!-- <form action="/admin" method="GET" style="display: inline;">
+            <a href="#" onclick="this.closest('form').submit();">Control Panel</a>
+        </form>
+        <a href="#"> View Event Request Form</a>
+        <form action="/maintainAdmin" method="GET" style="display: inline;">
+            <a href="#" onclick="this.closest('form').submit();">Manage Admins</a>
+        </form> -->
+        <!-- Logout as an 'a' tag -->
+        <form action="/logout" method="POST" style="display: inline;">
+            <a href="#" onclick="this.closest('form').submit();" style="color: rgb(212, 19, 19); text-decoration: none; padding: 10px; cursor: pointer;">Logout</a>
+        </form>
+    </nav>
+</header>
+<br>
+  
   <h1 style="text-align: center;">Events</h1>
   <table>
     <thead>
@@ -73,5 +97,10 @@
   <form action="/addEvent" method="GET" style="display: flex; justify-content: center; margin: 20px 0;">
     <button type="submit">Add</button>
   </form>
+
+  <footer class="footer" style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: #f8f8f8; text-align: center; padding: 20px; border-top: 1px solid #ddd;">
+    <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
+  </footer>
+
 </body>
 </html>

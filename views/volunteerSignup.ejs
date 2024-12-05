@@ -20,31 +20,30 @@
             }
         }
     </script>
-    <script src="hamburger.js"></script>
 </head>
-<body>
-      <!-- Navigation Bar -->
-  <header class="navbar">
-    <a class="logo" href='/'>
-      <img src="logo2.png" alt="Logo">
-    <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
-  </a>
-    <nav class="nav-links">
-      <a href="#jensStory">JEN'S STORY</a>
-      <a href="#sponsors">SPONSORS</a>
-      <a href="#about">ABOUT</a>
-      <a href="#donations">DONATIONS</a>
-    </nav>
-    <div class="hamburger-icon" id="hamburger-icon">
-      ☰
+<body class="volunteer-signup-page">
+    <!-- Navigation Bar -->
+    <header class="navbar">
+        <a class="logo" href='/'>
+        <img src="logo2.png" alt="Logo">
+        <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
+    </a>
+        <nav class="nav-links">
+        <a href="/jensStory">JEN'S STORY</a>
+        <a href="/sponsors">SPONSORS</a>
+        <a href="/about">ABOUT</a>
+        <a href="/donations">DONATIONS</a>
+        </nav>
+        <div class="hamburger-icon" id="hamburger-icon">
+        ☰
+        </div>
+    </header>
+    <div id="dropdown-menu" class="dropdown hidden">
+        <a href="/jensStory">JEN'S STORY</a>
+        <a href="/sponsors">SPONSORS</a>
+        <a href="/about">ABOUT</a>
+        <a href="/donations">DONATIONS</a>
     </div>
-  </header>
-  <div id="dropdown-menu" class="dropdown hidden">
-    <a href="#jensStory">JEN'S STORY</a>
-    <a href="#sponsors">SPONSORS</a>
-    <a href="#about">ABOUT</a>
-    <a href="#donations">DONATIONS</a>
-  </div>
 
     <form action="/addVolunteer" method="POST" class="form-container">
         <h1>Volunteer Signup</h1>
@@ -84,9 +83,7 @@
         
         <button type="submit" class="lead-button">Submit</button>
     </form>
+    <script src="hamburger.js"></script>
     <br><br><br><br><br><br><br><br>
 </body>
 </html>
-
-
-
