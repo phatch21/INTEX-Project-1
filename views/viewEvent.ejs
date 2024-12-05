@@ -2,9 +2,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <link rel="stylesheet" href="../styles.css">
   <title>View Event</title>
   <style>
-    form {
+    .specificform {
       width: 50%;
       margin: 20px auto;
       padding: 20px;
@@ -40,51 +41,35 @@
     }
   </style>
   <script>
-    function toggleVolunteerInput() {
+    function enableEditing() {
+      document.querySelectorAll('input, select').forEach(input => input.readOnly = false);
+      document.querySelectorAll('select').forEach(select => select.disabled = false);
+      document.getElementById('submitButton').style.display = 'block';
+    }
+
+    function toggleAdditionalFields() {
       const status = document.getElementById('eventstatus').value;
-      const volunteerInput = document.getElementById('volunteerInput');
-      const participantsRealInput = document.getElementById('participantsRealInput');
-      const volunteersRealInput = document.getElementById('volunteersRealInput');
-      const numvoluntestInput = document.getElementById('numvoluntest');
-
-      if (status === 'approved') {
-        volunteerInput.style.display = 'block';  // Show the volunteer input when status is 'approved'
-        numvoluntestInput.readOnly = false;      // Make numvoluntest editable
-        participantsRealInput.style.display = 'none';  // Hide the actual attendance/volunteers fields
-        volunteersRealInput.style.display = 'none';
-      } else if (status === 'complete') {
-        volunteerInput.style.display = 'block';  // Show the volunteer input when status is 'complete'
-        numvoluntestInput.readOnly = true;       // Make numvoluntest read-only
-
-        participantsRealInput.style.display = 'block';  // Show the real participants fields
-        volunteersRealInput.style.display = 'block';
-        
-        // Make the new fields editable
-        participantsRealInput.querySelector('input').readOnly = false;
-        volunteersRealInput.querySelector('input').readOnly = false;
+      const additionalFields = document.getElementById('additionalFields');
+      const teamMembersField = document.getElementById('teamMembersField');
+      
+      // Show fields based on status
+      additionalFields.style.display = status === 'Complete' ? 'block' : 'none';
+      if (status === 'Approved' || status === 'Complete') {
+        teamMembersField.style.display = 'block';
       } else {
-        volunteerInput.style.display = 'none';   // Hide the volunteer input for other statuses
-        participantsRealInput.style.display = 'none';
-        volunteersRealInput.style.display = 'none';
+        teamMembersField.style.display = 'none';
       }
+
     }
   </script>
 </head>
-<body>
-
-  <header class="navbar">
+<body onload="toggleAdditionalFields()">
+    <header class="navbar">
             <a class="logo" href='/'>
                 <img src="logo2.png" alt="Logo">
               <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
             </a>
             <nav class="nav-links">
-                <form action="/admin" method="GET" style="display: inline;">
-                    <a href="#" onclick="this.closest('form').submit();">Control Panel</a>
-                </form>
-                <a href="#"> View Event Request Form</a>
-                <form action="/maintainAdmin" method="GET" style="display: inline;">
-                    <a href="#" onclick="this.closest('form').submit();">Manage Admins</a>
-                </form>
                 <!-- Logout as an 'a' tag -->
                 <form action="/logout" method="POST" style="display: inline;">
                     <a href="#" onclick="this.closest('form').submit();" style="color: rgb(212, 19, 19); text-decoration: none; padding: 10px; cursor: pointer;">Logout</a>
@@ -92,64 +77,124 @@
             </nav>
         </header>
         <br>
-
   <h1 style="text-align: center;">View Event</h1>
-  <form action="/viewEvent/<%= event.eventid %>" method="POST">
-
-    <!-- Event Name (Read-only) -->
+  <a href="/requestedEvents" style="text-decoration: none;">
+    <button type="button" style="position: absolute; top: 10px; right: 10px; margin: 10px; font-size: 14px; padding: 5px 15px; width: auto;">Back</button>
+  </a>
+  <button type="button" style="position: absolute; top: 10px; right: 100px; margin: 10px; font-size: 14px; padding: 5px 15px; width: auto;" onclick="enableEditing()">Edit</button>
+  
+  <form action="/viewEvent/<%= event.eventid %>" method="POST" class="specificform">
+    <!-- Event Details -->
     <label for="eventname">Event Name</label>
     <input type="text" id="eventname" name="eventname" value="<%= event.eventname %>" readonly>
 
+    <h3>Event Dates</h3>
+    <div style="font-size:medium">
+        <% event.scheduleDetails.forEach((schedule, index) => { %>
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <div style="margin-right: 20px;">
+                    <label for="event_date_<%= index %>">Date: </label>
+                    <input type="date" name="event_date_<%= index %>" value="<%= new Date(schedule.event_date).toISOString().split('T')[0] %>" >
+                </div>
+                
+                <div style="margin-right: 10px;">
+                    <label for="start_time_<%= index %>">Start Time: </label>
+                    <input type="time" name="start_time_<%= index %>" value="<%= schedule.start_time %>" >
+                </div>
+                
+                <div style="margin-left: 20px;">
+                    <label for="end_time_<%= index %>">End Time: </label>
+                    <input type="time" name="end_time_<%= index %>" value="<%= schedule.end_time %>" >
+                </div>
+            </div>
+        <% }) %>
+    </div>
+    
     <!-- Organizer Information -->
-    <label for="organizer_name">Organizer Name</label>
-    <input type="text" id="organizer_name" name="organizer_name" value="<%= event.firstname %> <%= event.lastname %>" readonly>
+    <input type="number" id="organizerid" name="organizerid" value="<%= event.organizerid %>" hidden>
+    <input type="number" id="locationid" name="locationid" value="<%= event.locationid %>" hidden>
+    <input type="number" id="productionid" name="productionid" value="<%= event.productionid %>" hidden>
 
-    <label for="organizer_phone">Organizer Phone</label>
-    <input type="text" id="organizer_phone" name="organizer_phone" value="<%= event.phone %>" readonly>
 
-    <label for="organizer_email">Organizer Email</label>
-    <input type="email" id="organizer_email" name="organizer_email" value="<%= event.email %>" readonly>
-
-    <!-- Schedule Information -->
-    <label for="event_date">Event Date</label>
-    <input type="text" id="event_date" name="event_date" value="<%=event.event_date %>" readonly>
-
-    <label for="start_time">Start Time</label>
-    <input type="text" id="start_time" name="start_time" value="<%= event.start_time %>" readonly>
-
-    <label for="end_time">End Time</label>
-    <input type="text" id="end_time" name="end_time" value="<%=event.end_time%>" readonly>
+    <label for="firstname">Organizer First Name</label>
+    <input type="text" id="firstname" name="firstname" value="<%= event.firstname %>" >
+    <label for="lastname">Organizer Last Name</label>
+    <input type="text" id="lastname" name="lastname" value="<%= event.lastname %>" >
 
     <!-- Location Information -->
     <label for="address">Address</label>
-    <input type="text" id="address" name="address" value="<%= event.address %>, <%= event.city %>, <%= event.state %> <%= event.zip %>" readonly>
+    <input type="text" id="address" name="address" value="<%= event.address %>" >
 
-    <!-- Estimated Attendance -->
-    <label for="estattendance">Estimated Attendance</label>
-    <input type="number" id="estattendance" name="estattendance" value="<%= event.estattendance %>" readonly>
+    <label for="city">City</label>
+    <input type="text" id="city" name="city" value="<%= event.city %>" >
 
-    <div id="volunteerInput" style="display: <%= event.eventstatus === 'approved' || event.eventstatus === 'complete' ? 'block' : 'none' %>;">
-      <label for="numvoluntest">Estimated Volunteers Needed</label>
-      <input type="number" id="numvoluntest" name="numvoluntest" value="<%= event.numvoluntest %>" readonly />
-    </div>
+    <label for="state">State</label>
+    <input type="text" id="state" name="state" value="<%= event.state %>" >
 
-    <!-- New fields for real attendance and volunteers -->
-    <div id="participantsRealInput" style="display: <%= event.eventstatus === 'complete' ? 'block' : 'none' %>;">
-      <label for="participantsreal">Actual Participants</label>
-      <input type="number" id="participantsreal" name="participantsreal" value="<%= event.participantsreal %>" />
-    </div>
+    <label for="zip">Zip Code</label>
+    <input type="text" id="zip" name="zip" value="<%= event.zip %>" >
 
-    <div id="volunteersRealInput" style="display: <%= event.eventstatus === 'complete' ? 'block' : 'none' %>;">
-      <label for="volunteersreal">Actual Volunteers</label>
-      <input type="number" id="volunteersreal" name="volunteersreal" value="<%= event.volunteersreal %>" />
-    </div>
-
-    <label for="eventstatus">Event Status</label>
-    <select id="eventstatus" name="eventstatus" onchange="toggleVolunteerInput()">
-      <option value="requested" <%= event.eventstatus === 'requested' ? 'selected' : '' %>>Requested</option>
-      <option value="approved" <%= event.eventstatus === 'approved' ? 'selected' : '' %>>Approved</option>
-      <option value="complete" <%= event.eventstatus === 'complete' ? 'selected' : '' %>>Complete</option>
+    <label for="activity">Event Activity</label>
+    <select id="activity" name="activity" >
+      <option value="Sewing" <%= event.activity === 'Sewing' ? 'selected' : '' %>>Sewing</option>
+      <option value="Non-Sewing" <%= event.activity === 'Non-Sewing' ? 'selected' : '' %>>Non-Sewing</option>
+      <option value="Both" <%= event.activity === 'Both' ? 'selected' : '' %>>Both</option>
     </select>
+
+    <label for="jenstory">Jen's Story</label>
+    <select id="jenstory" name="jenstory" >
+      <option value="No" <%= event.jenstory === 'No' ? 'selected' : '' %>>No</option>
+      <option value="Full" <%= event.jenstory === 'Full' ? 'selected' : '' %>>Full</option>
+      <option value="Short" <%= event.jenstory === 'Short' ? 'selected' : '' %>>Short</option>
+    </select>
+
+
+    <label for="participants">Estimated Participants</label>
+    <input type="number" id="participants" name="participants" value="<%= event.estattendance %>" >
+
+
+    <!-- Dynamic Fields -->
+    <div id="teamMembersField" class="hidden">
+      <label for="teammembers">Estimated Team Members</label>
+      <input type="number" id="teammembers" name="teammembers" value="<%= event.numvoluntest %>">
+    </div>
+
+    <div id="additionalFields" class="hidden">
+      <!-- Actual Participants and Volunteers Fields -->
+      <label for="participantsreal">Actual Participants</label>
+      <input type="number" id="participantsreal" name="participantsreal" value="<%= event.participantsreal %>">
+    
+      <label for="volunteersreal">Actual Volunteers</label>
+      <input type="number" id="volunteersreal" name="volunteersreal" value="<%= event.volunteersreal %>">
+    
+      <!-- Produced Items Fields -->
+      <div id="producedItemsSection">
+        <label for="pockets">Pockets Produced</label>
+        <input min="1" type="number" id="pockets" name="pockets" value="<%= event.itemProductions.Pockets %>" >
+      
+        <label for="collars">Collars Produced</label>
+        <input min="1" type="number" id="collars" name="collars" value="<%= event.itemProductions.Collars %>" >
+      
+        <label for="envelopes">Envelopes Produced</label>
+        <input min="1" type="number" id="envelopes" name="envelopes" value="<%= event.itemProductions.Envelopes %>" >
+      
+        <label for="vestPiece">Vest Piece Produced</label>
+        <input min="1" type="number" id="vestPiece" name="vestPiece" value="<%= event.itemProductions.VestPiece %>" >
+      
+        <label for="completedProduct">Completed Product Produced</label>
+        <input min="1" type="number" id="completedProduct" name="completedProduct" value="<%= event.itemProductions.CompletedProduct %>" >
+
+        <input id="itemnum" name="itemnum" value="<%= event.itemnum %>" hidden>
+      </div>
+      
+    </div>
+        <!-- Event Status -->
+        <label for="eventstatus">Event Status</label>
+        <select id="eventstatus" name="eventstatus" onchange="toggleAdditionalFields()" >
+          <option value="Requested" <%= event.eventstatus === 'Requested' ? 'selected' : '' %>>Requested</option>
+          <option value="Approved" <%= event.eventstatus === 'Approved' ? 'selected' : '' %>>Approved</option>
+          <option value="Complete" <%= event.eventstatus === 'Complete' ? 'selected' : '' %>>Complete</option>
+        </select>
 
     <!-- Submit Button -->
     <button type="submit">Save Changes</button>
