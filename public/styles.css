@@ -10,6 +10,7 @@ body, html {
   color: #333;
   height: 100%;
   background-color: #ffffff; /* Unified background color */
+  font-size: 1rem; /* Ensure no scaling */
 }
 
 /* Ensure body content starts below the header */
@@ -33,6 +34,7 @@ body {
   border-bottom: 1px solid #ccc;
   padding: 10px 20px;
   z-index: 1000; /* Ensure it stays above other content */
+  font-size: 1rem;
 }
 
 .logo {
@@ -49,11 +51,13 @@ body {
 .logo img {
   max-height: 50px; /* Adjust height as needed */
   width: auto; /* Maintain aspect ratio */
+  user-select: none;   /* PAYTON'S EDIT */
 }
  
 .logo span {
   font-size: 1rem;
   font-weight: bold;
+  letter-spacing: normal; /* Reset spacing if altered */
   color: #333; /* Set a fixed text color */
   transition: none; /* Prevent color change on hover or focus */
 }
@@ -333,7 +337,7 @@ input[type="checkbox"] {
 /* Responsive Design */
 @media (max-width: 768px) {
   .nav-links a {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
  
   .lead-content h1 {
@@ -582,6 +586,10 @@ html, body {
 }
 
 /* Styling for Story Pages */
+.small-img-page .story-page img {
+  max-width: 40%; /* Restricts image width to 40% for the other page */
+}
+
 .story-page {
   font-family: 'Georgia', serif; /* Traditional font for storytelling */
   line-height: 1.8; /* Comfortable line spacing */
@@ -592,29 +600,30 @@ html, body {
   border-radius: 10px; /* Soft, rounded edges */
   max-width: 800px; /* Limits width for better focus on content */
 }
- 
+
 /* Styling for Paragraphs */
 .story-page p {
   text-align: left; /* Centers the text */
   margin-bottom: 1.5em; /* Space between paragraphs */
   font-style: italic; /* Optional: gives a storytelling or news editorial feel */
 }
- 
+
 /* Styling for Headings */
 .story-page h1, .story-page h2, .story-page h3 {
   font-family: 'Arial Black', sans-serif; /* Distinct font for headings */
   margin-top: 1em; /* Adds space above headings */
   color: #15141A; /* Darker color for emphasis */
 }
- 
+
 /* Styling for Images */
 .story-page img {
   display: block; /* Centers the image if not floated */
   margin: 20px auto; /* Center align and add spacing */
-  max-width: 40%; /* Ensures image doesn't overflow */
+  max-width: 100%; /* Ensures image doesn't overflow */
   height: auto; /* Maintains aspect ratio */
   border-radius: 10px; /* Matches the rounded style of the container */
   margin-right: 20px;
+  user-select: none;   /* PAYTON'S EDIT */
 }
 /* Ensure lists and other content adjust around floated images */
 .story-page ul {
@@ -622,11 +631,11 @@ html, body {
   padding-left: 20px; /* Adds padding for list indentation */
   overflow: hidden; /* Ensures proper wrapping around the floated image */
 }
- 
+
 .story-page li {
   margin-bottom: 0.5em; /* Adds spacing between list items */
 }
- 
+
 /* Styling for Quotes */
 .story-page blockquote {
   font-style: italic;
@@ -636,6 +645,12 @@ html, body {
   padding: 10px 20px;
   background: #eee;
 }
+.story-page figcaption {
+  text-align: center; /* Centers the caption text */
+  font-size: 1rem; /* Adjust the size of the caption */
+  color: #555; /* Softer color to differentiate from main content */
+}
+
 .image-wrap {
   float: left; /* Floats the image to the left */
   margin-right: 15px; /* Adds space between the image and the text */
@@ -645,7 +660,7 @@ html, body {
   object-fit: cover; /* Ensures the image fits within its container */
   border-radius: 5px; /* Optional: adds rounded corners for a polished look */
 }
- 
+
 .image-wrap-right {
   float: right; /* Floats the image to the left */
   margin-right: 15px; /* Adds space between the image and the text */
@@ -655,13 +670,20 @@ html, body {
   object-fit: cover; /* Ensures the image fits within its container */
   border-radius: 5px; /* Optional: adds rounded corners for a polished look */
 }
- 
+
 .image-left {
   float: left; /* Anchors the image to the left */
   margin-right: 30px; /* Adds spacing between the image and the text */
   margin-bottom: 15px; /* Optional: Adds spacing below the image */
   max-width: 40%; /* Adjust the size of the image */
   height: auto; /* Maintains aspect ratio */
+}
+.full-width-image {
+  display: block; /* Ensures the image behaves as a block-level element */
+  width: 200%; /* Stretches the image to the full width of its container */
+  height: auto; /* Maintains the aspect ratio of the image */
+  margin: 0 auto; /* Centers the image if it's inside a centered container */
+  border-radius: 0; /* Removes any rounded corners (optional) */
 }
 
 /* TABLE CSS START */
