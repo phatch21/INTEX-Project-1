@@ -492,7 +492,7 @@ app.get('/displayEvents', isAuthenticated, (req, res) => {
         });
 });
  
-app.get('/viewEvent/:eventid', (req, res) => {
+app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
     const eventid = req.params.eventid;
     knex('event')
         .join('schedule', 'event.eventid', '=', 'schedule.eventid')
