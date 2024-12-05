@@ -251,6 +251,86 @@ input[type="checkbox"] {
   margin-left: 20px;
 }
 
+.hamburger-icon {
+  display: none; /* Hidden by default */
+  font-size: 24px;
+  cursor: pointer; /* Pointer cursor on hover */
+  user-select: none; /* Prevent text selection */
+}
+
+/* Dropdown Menu Styling */
+.dropdown {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%; /* Full width dropdown */
+  background: #f4f4f4;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: none; /* Hidden by default */
+  overflow-y: auto; /* Enable scrolling if needed */
+  flex-direction: column; /* Arrange items vertically */
+  padding: 10px 0;
+}
+
+/* Ensure visibility when dropdown is active */
+.dropdown.hidden {
+  display: none;
+}
+
+.dropdown:not(.hidden) {
+  display: flex;
+  height: auto; /* Dynamically adjust height based on content */
+}
+
+/* Style individual dropdown links */
+.dropdown a {
+  display: block;
+  padding: 15px 20px;
+  text-decoration: none;
+  color: #666; /* Default gray text */
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Hover effect for dropdown links */
+.dropdown a:hover {
+  background: #e0e0e0; /* Light background on hover */
+  color: #1c8e00; /* Green text on hover */
+}
+
+/* Responsive Fix */
+@media (max-width: 768px) {
+  .dropdown {
+    display: none; /* Hidden by default */
+  }
+
+  .dropdown:not(.hidden) {
+    display: flex; /* Flex layout for vertical menu */
+    height: auto; /* Auto height for smaller screens */
+  }
+
+  .hamburger-icon {
+    display: block; /* Hamburger icon visible on small screens */
+  }
+
+  .nav-links {
+    display: none; /* Hide full nav links on small screens */
+  }
+}
+
+/* Larger screen adjustments */
+@media (min-width: 769px) {
+  .hamburger-icon {
+    display: none; /* Hide hamburger icon on larger screens */
+  }
+
+  .dropdown {
+    display: none; /* Dropdown not used on larger screens */
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .nav-links a {
