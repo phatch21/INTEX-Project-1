@@ -6,21 +6,48 @@
     <title>Create New Admin</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-    <h1 style="text-align: center;">Create New Admin</h1>
-    <form action="/createAdmin" method="POST" class="form-container">
-        <label for="fname" >Enter your first name:</label>
-        <input type="text" id="fname" name="fname" >
-        <br><br>
-        <label for="lname" >Enter your last name:</label>
-        <input type="text" id="lname" name="lname">
-        <br><br>
-        <label for="username" >Create a unique username:</label>
-        <input type="text" id="username" name="username" >
-        <br><br>
-        <label for="password" >Create a secure password:</label>
-        <input type="password" id="password" name="password">
-        <br><br>
-        <button type="submit" >Create User</button>
-</body>
+<main>
+    <body>
+        <header class="navbar">
+            <a class="logo" href='/'>
+                <img src="logo2.png" alt="Logo">
+              <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
+            </a>
+            <nav class="nav-links">
+                <form action="/admin" method="GET" style="display: inline;">
+                    <a href="#" onclick="this.closest('form').submit();">Control Panel</a>
+                </form>
+                <a href="#"> View Event Request Form</a>
+                <form action="/maintainAdmin" method="GET" style="display: inline;">
+                    <a href="#" onclick="this.closest('form').submit();">Manage Admins</a>
+                </form>
+                <!-- Logout as an 'a' tag -->
+                <form action="/logout" method="POST" style="display: inline;">
+                    <a href="#" onclick="this.closest('form').submit();" style="color: rgb(212, 19, 19); text-decoration: none; padding: 10px; cursor: pointer;">Logout</a>
+                </form>
+            </nav>
+        </header>
+        <br>
+
+        <h1 style="text-align: center;">Create New Admin</h1>
+        <form action="/createAdmin" method="POST" class="form-container">
+            <label for="fname" >Enter your first name:</label>
+            <input type="text" id="fname" name="fname" >
+            <br><br>
+            <label for="lname" >Enter your last name:</label>
+            <input type="text" id="lname" name="lname">
+            <br><br>
+            <label for="username" >Create a unique username:</label>
+            <input type="text" id="username" name="username" >
+            <br><br>
+            <label for="password" >Create a secure password:</label>
+            <input type="password" id="password" name="password">
+            <br><br>
+            <button type="submit" >Create User</button>
+    </body>
+</main>
+
+<footer class="footer">
+    <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
+    <br></footer>
 </html>
