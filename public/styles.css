@@ -557,21 +557,25 @@ html, body {
   }
 }
 
-/* Sidebar styling */
+.sidebar-container {
+  position: relative; /* Ensures toggle button is positioned relative to the container */
+  display: flex;
+  flex-direction: row;
+}
+
 .sidebar {
   width: 200px;
   background-color: #f4f4f4;
   padding: 20px;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease; /* Smooth retract/expand effect */
+  height: 100vh; /* Full-height sidebar */
   position: fixed;
-  top: 0;
-  bottom: 0;
+  top: 71px;
   left: 0;
-  overflow-y: auto; /* Allow vertical scrolling */
-  padding-top: 80px; /* Add padding to move the first link below the header */
+  z-index: 1000;
 }
- 
-/* Sidebar link styling */
+
 .sidebar a {
   display: block;
   padding: 10px;
@@ -579,10 +583,50 @@ html, body {
   text-decoration: none;
   font-size: 1rem;
 }
- 
+
 .sidebar a:hover {
   background-color: #e0e0e0;
   color: #1c8e00;
+}
+
+.toggle-btn {
+  visibility: hidden;
+  position: fixed;
+  top: 180px;
+  left: 210px; /* Position next to the sidebar */
+  z-index: 1100;
+  background-color: #1c8e00;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: left 0.3s ease;
+  opacity: 50;
+}
+
+.sidebar.collapsed {
+  transform: translateX(-100%); /* Hide sidebar by sliding it left */
+}
+
+.toggle-btn.collapsed {
+  left: 10px; /* Adjust position for collapsed state */
+}
+
+/* Make it responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 150px; /* Smaller sidebar for smaller screens */
+  }
+
+  .toggle-btn {
+    left: 160px;
+    visibility: inherit;
+  }
+
+  .sidebar.collapsed + .toggle-btn {
+    left: 10px;
+  }
 }
 
 /* Styling for Story Pages */
@@ -678,6 +722,12 @@ html, body {
   max-width: 40%; /* Adjust the size of the image */
   height: auto; /* Maintains aspect ratio */
 }
+.image-left-container::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 .full-width-image {
   display: block; /* Ensures the image behaves as a block-level element */
   width: 200%; /* Stretches the image to the full width of its container */
