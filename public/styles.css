@@ -611,7 +611,7 @@ html, body {
 /* Styling for Headings */
 .story-page h1, .story-page h2, .story-page h3 {
   font-family: 'Arial Black', sans-serif; /* Distinct font for headings */
-  margin-top: 1em; /* Adds space above headings */
+  margin-top: .1em; /* Adds space above headings */
   color: #15141A; /* Darker color for emphasis */
 }
 
