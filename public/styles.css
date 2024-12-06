@@ -1,0 +1,763 @@
+/* Reset and Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  font-family: Arial, sans-serif;
+  color: #333;
+  height: 100%;
+  background-color: #ffffff; /* Unified background color */
+}
+
+/* Ensure body content starts below the header */
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+
+/* Navigation Bar */
+.navbar {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  justify-content: space-between; /* Space between logo and links */
+  position: sticky; /* Keep navbar at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #f4f4f4; /* Unified navbar background */
+  border-bottom: 1px solid #ccc;
+  padding: 10px 20px;
+  z-index: 1000; /* Ensure it stays above other content */
+}
+
+.logo {
+  font-size: 1rem;
+  font-weight: bold;
+  object-fit: contain;
+  max-height: 100%; /* Fit logo height */
+  display: flex;
+  align-items: center; /* Align image and text vertically */
+  gap: 10px; /* Space between image and text */
+  text-decoration: none; /* Remove any text decoration like underline */
+}
+
+.logo img {
+  max-height: 50px; /* Adjust height as needed */
+  width: auto; /* Maintain aspect ratio */
+}
+ 
+.logo span {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333; /* Set a fixed text color */
+  transition: none; /* Prevent color change on hover or focus */
+}
+
+/* Prevent text color change on hover */
+.logo:hover span,
+.logo:focus span {
+  color: #333; /* Ensure it stays the same */
+}
+
+.logo a {
+  text-decoration: none; /* Remove underline */
+  color: #333; /* Fix text color */
+}
+ 
+.logo a:visited,
+.logo a:hover,
+.logo a:active {
+  color: #333; /* Ensure consistent color for all states */
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  margin: 0 10px;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.nav-links a:hover {
+  color: #1c8e00;
+}
+
+/* Parent container for the divs */
+.side-by-side {
+  display: flex;
+  justify-content: space-around; /* Space divs evenly */
+  align-items: stretch;
+  gap: 0px;
+}
+
+/* Individual content boxes */
+.content-box {
+  position: relative; /* Enable positioning inside the div */
+  display: flex;
+  flex-direction: column; /* Stack text and button vertically */
+  justify-content: space-between;
+  text-align: center; /* Center the text */
+  padding: 20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 40vh;
+  width: 100vh;
+}
+
+.content-box p {
+  margin: 0; /* Remove default margin */
+  font-size: 16px;
+  color: #333;
+}
+
+.content-box a {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-decoration: none;
+  background-color: #1c8e00;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.content-box a:hover {
+  background-color: #0056b3;
+}
+
+/* Lead Section */
+.lead-section {
+  height: calc(50vh - 60px); /* Adjust for nav height */
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+  padding-top: 60px; /* Offset for fixed nav */
+}
+
+.lead-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Overlay effect */
+}
+
+.lead-content {
+  position: relative;
+  z-index: 10;
+}
+
+.lead-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.lead-content p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.lead-button {
+  background: #1c8e00; /* Unified button color */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.lead-button:hover {
+  background-color: #156b00;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-size: 14px;
+  color: #777;
+  padding: 20px 0;
+  border-top: 1px solid #ddd;
+  background-color: #f8f8f8;
+}
+
+/* Form Styling */
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+  text-align: center;
+  color: #333;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 1rem;
+  display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Checkbox Container */
+.checkbox-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+/* Hidden Elements */
+.hidden {
+  display: none;
+}
+
+#teach-container {
+  display: none;
+  margin-left: 20px;
+}
+
+.hamburger-icon {
+  display: none; /* Hidden by default */
+  font-size: 24px;
+  cursor: pointer; /* Pointer cursor on hover */
+  user-select: none; /* Prevent text selection */
+}
+
+/* Dropdown Menu Styling */
+.dropdown {
+  position: fixed;
+  top: 60px;
+  left: 0;
+  width: 100%; /* Full width dropdown */
+  background: #f4f4f4;
+  border-top: 1px solid #ccc;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  display: none; /* Hidden by default */
+  overflow-y: auto; /* Enable scrolling if needed */
+  flex-direction: column; /* Arrange items vertically */
+  padding: 10px 0;
+}
+
+/* Ensure visibility when dropdown is active */
+.dropdown.hidden {
+  display: none;
+}
+ 
+.dropdown:not(.hidden) {
+  display: flex;
+  height: auto; /* Dynamically adjust height based on content */
+}
+
+/* Style individual dropdown links */
+.dropdown a {
+  display: block;
+  padding: 15px 20px;
+  text-decoration: none;
+  color: #333; 
+  font-size: 1rem;
+  font-weight: bold;
+}
+ 
+/* Hover effect for dropdown links */
+.dropdown a:hover {
+  background: #e0e0e0; /* Light background on hover */
+  color: #1c8e00; /* Green text on hover */
+}
+
+/* Responsive Fix */
+@media (max-width: 768px) {
+  .dropdown {
+    display: none; /* Hidden by default */
+  }
+ 
+  .dropdown:not(.hidden) {
+    display: flex; /* Flex layout for vertical menu */
+    height: auto; /* Auto height for smaller screens */
+  }
+ 
+  .hamburger-icon {
+    display: block; /* Hamburger icon visible on small screens */
+  }
+ 
+  .nav-links {
+    display: none; /* Hide full nav links on small screens */
+  }
+}
+ 
+/* Larger screen adjustments */
+@media (min-width: 769px) {
+  .hamburger-icon {
+    display: none; /* Hide hamburger icon on larger screens */
+  }
+ 
+  .dropdown {
+    display: none; /* Dropdown not used on larger screens */
+  }
+}
+ 
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav-links a {
+    font-size: 0.9rem;
+  }
+ 
+  .lead-content h1 {
+    font-size: 2rem;
+  }
+ 
+  .lead-content p {
+    font-size: 1rem;
+  }
+ 
+  .lead-button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}
+
+
+
+/* new Styles added by Spencer */
+html, body {
+  height:max-content; /* Ensures the HTML and body take up the full viewport height */
+  margin: 0;
+  padding: 0;
+}
+
+.volunteer-signup-page {
+  background-image: url('funbackground.webp'); /* Replace with your image path */
+  background-repeat: repeat; /* Ensures the image repeats horizontally and vertically */
+  background-position: top left; /* Starts the pattern at the top-left corner */
+  background-size: auto; /* Keeps the original size of the image */
+  min-height: 100vh; /* Ensures the body extends at least the full viewport height */
+}
+
+/* Side-by-Side Container */
+.side-by-side {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Space between content boxes */
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+/* Content Box Styling */
+.content-box {
+  position: relative;
+  flex: 1; /* Equal width for both boxes */
+  height: 40vh; /* Consistent height */
+  color: white;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Align content at the bottom */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a slight shadow */
+}
+
+/* Specific Background Images */
+.volunteer-event {
+  background-image: url('volunteers1.jpg'); /* Replace with actual image path */
+}
+
+.host-event {
+  background-image: url('volunteers7.jpg'); /* Replace with actual image path */
+}
+
+/* Text Overlay Styling */
+.transparent-text {
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+/* Button Styling */
+.lead-button {
+  text-decoration: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #5cb85c;
+  color: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lead-button:hover {
+  background-color: #4cae4c;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .side-by-side {
+      flex-direction: column;
+  }
+
+  .content-box {
+      height: 30vh; /* Adjust height for smaller screens */
+  }
+}
+
+/* Lead Section Styling */
+.lead-section {
+  position: relative;
+  background-image: url('volunteers2.jpg'); /* Replace 'your-image.jpg' with your actual image path */
+  background-size: cover; /* Ensures the image covers the entire section */
+  background-position: center; /* Centers the image */
+  background-repeat: no-repeat; /* Prevents the image from repeating */
+  height: 60vh; /* Set section height */
+  display: flex;
+  align-items: center; /* Center content vertically */
+  justify-content: center; /* Center content horizontally */
+  text-align: center;
+  color: white; /* Makes the text white for visibility */
+  padding: 0 20px; /* Add some padding for spacing */
+}
+
+/* Lead Content Styling */
+.lead-content {
+  max-width: 800px; /* Limit text width for readability */
+}
+
+.lead-content p {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.lead-content h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.lead-content img {
+  width: 150px; /* Adjust logo size */
+  height: auto;
+  margin-top: 20px;
+}
+
+.transparent-text {
+  font-size: 1.2rem; /* Adjust font size */
+  color: rgba(255, 255, 255, 0.9); /* White text with slight transparency */
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7); /* Add shadow for better contrast */
+  margin: 20px 0; /* Add space around the text */
+  padding: 10px 20px; /* Add padding for better readability */
+  background: rgba(0, 0, 0, 0.3); /* Optional: Slight black background */
+  border-radius: 5px; /* Smooth rounded edges */
+}
+
+.side-by-side {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px; /* Space between the content boxes */
+  margin: 20px auto;
+  max-width: 1200px;
+}
+
+.content-box {
+  position: relative;
+  flex: 1; /* Equal width for both boxes */
+  height: 40vh; /* Consistent height */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Align button and text at the bottom */
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add slight shadow */
+  padding: 10px;
+}
+
+.transparent-text {
+  font-size: 1.2rem;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.lead-button {
+  text-decoration: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #5cb85c;
+  color: white;
+  border-radius: 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.lead-button:hover {
+  background-color: #4cae4c;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .side-by-side {
+      flex-direction: column;
+  }
+
+  .content-box {
+      height: 30vh; /* Adjust height for smaller screens */
+  }
+
+  .transparent-text {
+      font-size: 1rem;
+  }
+}
+
+/* Sidebar styling */
+.sidebar {
+  width: 200px;
+  background-color: #f4f4f4;
+  padding: 20px;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  overflow-y: auto; /* Allow vertical scrolling */
+  padding-top: 80px; /* Add padding to move the first link below the header */
+}
+ 
+/* Sidebar link styling */
+.sidebar a {
+  display: block;
+  padding: 10px;
+  color: #333;
+  text-decoration: none;
+  font-size: 1rem;
+}
+ 
+.sidebar a:hover {
+  background-color: #e0e0e0;
+  color: #1c8e00;
+}
+
+/* Styling for Story Pages */
+.story-page {
+  font-family: 'Georgia', serif; /* Traditional font for storytelling */
+  line-height: 1.8; /* Comfortable line spacing */
+  font-size: 1.2rem; /* Readable font size */
+  color: #333; /* Neutral text color */
+  margin: 20px auto; /* Centers the content area */
+  padding: 15px; /* Inner spacing for comfort */
+  border-radius: 10px; /* Soft, rounded edges */
+  max-width: 800px; /* Limits width for better focus on content */
+}
+ 
+/* Styling for Paragraphs */
+.story-page p {
+  text-align: left; /* Centers the text */
+  margin-bottom: 1.5em; /* Space between paragraphs */
+  font-style: italic; /* Optional: gives a storytelling or news editorial feel */
+}
+ 
+/* Styling for Headings */
+.story-page h1, .story-page h2, .story-page h3 {
+  font-family: 'Arial Black', sans-serif; /* Distinct font for headings */
+  margin-top: 1em; /* Adds space above headings */
+  color: #15141A; /* Darker color for emphasis */
+}
+ 
+/* Styling for Images */
+.story-page img {
+  display: block; /* Centers the image if not floated */
+  margin: 20px auto; /* Center align and add spacing */
+  max-width: 40%; /* Ensures image doesn't overflow */
+  height: auto; /* Maintains aspect ratio */
+  border-radius: 10px; /* Matches the rounded style of the container */
+  margin-right: 20px;
+}
+/* Ensure lists and other content adjust around floated images */
+.story-page ul {
+  list-style-type: disc;
+  padding-left: 20px; /* Adds padding for list indentation */
+  overflow: hidden; /* Ensures proper wrapping around the floated image */
+}
+ 
+.story-page li {
+  margin-bottom: 0.5em; /* Adds spacing between list items */
+}
+ 
+/* Styling for Quotes */
+.story-page blockquote {
+  font-style: italic;
+  color: #555;
+  border-left: 5px solid #ccc;
+  margin: 20px 0;
+  padding: 10px 20px;
+  background: #eee;
+}
+.image-wrap {
+  float: left; /* Floats the image to the left */
+  margin-right: 15px; /* Adds space between the image and the text */
+  margin-bottom: 15px; /* Adds space below the image */
+  max-width: 30%; /* Restricts the image width to a reasonable percentage */
+  height: auto; /* Maintains aspect ratio */
+  object-fit: cover; /* Ensures the image fits within its container */
+  border-radius: 5px; /* Optional: adds rounded corners for a polished look */
+}
+ 
+.image-wrap-right {
+  float: right; /* Floats the image to the left */
+  margin-right: 15px; /* Adds space between the image and the text */
+  margin-bottom: 15px; /* Adds space below the image */
+  max-width: 30%; /* Restricts the image width to a reasonable percentage */
+  height: auto; /* Maintains aspect ratio */
+  object-fit: cover; /* Ensures the image fits within its container */
+  border-radius: 5px; /* Optional: adds rounded corners for a polished look */
+}
+ 
+.image-left {
+  float: left; /* Anchors the image to the left */
+  margin-right: 30px; /* Adds spacing between the image and the text */
+  margin-bottom: 15px; /* Optional: Adds spacing below the image */
+  max-width: 40%; /* Adjust the size of the image */
+  height: auto; /* Maintains aspect ratio */
+}
+
+/* TABLE CSS START */
+table {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+ 
+th, td {
+  border: 1px solid #ccc; /* Soft light border */
+  padding: 10px;
+  text-align: center;
+  line-height: 1.4;
+}
+ 
+th {
+  background-color: #dcdcdc; /* Soft gray header */
+  color: #333;
+  font-weight: bold;
+}
+ 
+td {
+  color: #333;
+}
+ 
+/* Button Styling */
+button {
+  padding: 8px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  background-color: #1c8e00; /* Green color from original styles.css */
+  color: white;
+  transition: background-color 0.3s ease;
+}
+ 
+button:hover {
+  background-color: #156b00; /* Darker green for hover */
+}
+ 
+button:focus {
+  outline: none;
+}
+ 
+/* Responsive Styling */
+@media (max-width: 768px) {
+  table {
+    width: 100%;
+  }
+ 
+  th, td {
+    font-size: 12px;
+    padding: 8px;
+  }
+ 
+  button {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+}
+ 
+@media (max-width: 480px) {
+  th, td {
+    font-size: 10px;
+    padding: 6px;
+  }
+ 
+  button {
+    font-size: 10px;
+    padding: 4px 8px;
+  }
+}
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 768px) {
+  .sponsor-card {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .bottom-row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .sponsor-card {
+    grid-template-columns: 1fr;
+  }
+  .bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+ 
+/* TABLE CSS END*/
+ 

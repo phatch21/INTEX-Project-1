@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Event Organizer List</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="navbar">
+    <a class="logo" href='/admin'>
+        <img src="logo2.png" alt="Logo">
+      <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
+    </a>
+    <nav class="nav-links">
+        <!-- <form action="/admin" method="GET" style="display: inline;">
+            <a href="#" onclick="this.closest('form').submit();">Control Panel</a>
+        </form>
+        <a href="#"> View Event Request Form</a>
+        <form action="/maintainAdmin" method="GET" style="display: inline;">
+            <a href="#" onclick="this.closest('form').submit();">Manage Admins</a>
+        </form> -->
+        <!-- Logout as an 'a' tag -->
+        <form action="/logout" method="POST" style="display: inline;">
+            <a href="#" onclick="this.closest('form').submit();" style="color: rgb(212, 19, 19); text-decoration: none; padding: 10px; cursor: pointer;">Logout</a>
+        </form>
+    </nav>
+</header>
+<br>
+
+  <h1 style="text-align: center;">Event Organizers</h1>
+  <table>
+    <thead>
+        <tr> <!-- table row -->
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (organizers.length > 0) { %>
+        <% organizers.forEach(row => { %> <!-- for each record, send the record to "row" -->
+          <tr>
+            <input type="hidden" value="row.id">
+            <td><%= row.firstname %></td>
+            <td><%= row.lastname %></td>
+            <td><%= row.email %></td>
+            <td><%= row.phone %></td>
+          </tr>
+        <% }) %>
+      <% } else { %>
+        <tr>
+          <td colspan="7">No data available</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+  <form action="/admin" method="GET" style="text-align: center;"><button>Return To Admin</button></form>
+
+  <footer class="footer" style="position: absolute; bottom: 0; left: 0; width: 100%; background-color: #f8f8f8; text-align: center; padding: 20px; border-top: 1px solid #ddd;">
+    <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
+  </footer>
+
+
+</body>
+</html>

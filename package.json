@@ -4,7 +4,8 @@
   "description": "This is the INTEX solution for Group 4-8 for the Turtle Shelter Project",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -23,9 +24,13 @@
   },
   "homepage": "https://github.com/phatch21/intex#readme",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "ejs": "^3.1.10",
     "express": "^4.21.1",
+    "express-session": "^1.18.1",
     "knex": "^3.1.0",
-    "pg": "^8.13.1"
+    "pg": "^8.13.1",
+    "qrcode": "^1.5.4",
+    "speakeasy": "^2.0.0"
   }
 }
