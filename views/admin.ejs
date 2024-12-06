@@ -8,44 +8,52 @@
     <style>
         /* General container for the page */
         .main-container {
-            width: 1366px;
+            width: 100%;
             margin: 0 auto;
-            position: relative;
             padding-top: 20px;
+            display: flex;
+            flex-wrap: wrap; /* Allows the cards to wrap */
+            gap: 20px; /* Adds spacing between cards */
+            justify-content: center; /* Centers the cards */
         }
- 
-        /* Style for the top left and right containers (Admin and Event cards) */
+
         .card-container {
-            width: 50%;
-            float: left;
-            padding: 20px;
+            width: 46%; /* Default width for cards */
             box-sizing: border-box;
         }
- 
-        /* Common card styling */
+
         .card {
             border: 3px solid #ccc;
             padding: 20px;
             border-radius: 15px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            height: 180px; /* Adjusted height to half of the previous value */
+            height: 320; /* Allow cards to adjust height based on content */
             margin-bottom: 20px;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* Center content vertically */
-            align-items: center; /* Center content horizontally */
+            justify-content: center;
+            align-items: center;
         }
- 
-        /* Styling for the Tableau dashboard */
+
+        /* Ensure dashboard card stays untouched */
         .dashboard-container {
-            width: 100%;
-            height: 768px;
+            width: 1366px;
+            height: auto;
             border: 3px solid #ccc;
-            padding: 20px;
+            padding: 15px;
             border-radius: 15px;
             margin-top: 20px;
-            overflow: hidden;
+            overflow: auto;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            
+        }
+
+        /* Responsive styling for smaller screens */
+        @media screen and (max-width: 768px) {
+            /* Apply only to card-containers that are not the dashboard */
+            .card-container:not(.dashboard-container) {
+                width: 100%; /* Cards take full width */
+            }
         }
  
         /* Ensure proper layout of forms inside cards */
@@ -62,6 +70,32 @@
         form button:hover {
             background-color: #45a049;
         }
+
+        .logout-btn {
+            padding: 10px 15px;
+            text-decoration: none;
+            color: white;
+            background-color: rgb(212, 19, 19);
+            border: none;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+            cursor: pointer;
+            white-space: nowrap; /* Prevent text wrapping */
+            display: inline-block; /* Ensure it behaves like a button */
+        }
+
+        .logout-btn:hover {
+            background-color: rgb(255, 50, 50); /* Lighter red for hover effect */
+        }
+
+        @media screen and (max-width: 768px) {
+            .logout-btn {
+                font-size: 12px; /* Adjust font size for smaller screens */
+                padding: 8px 12px; /* Adjust padding for smaller screens */
+            }
+        }
+
     </style>
 </head>
 <body>
@@ -71,20 +105,12 @@
           <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
         </a>
         <nav class="nav-links">
-            <!-- <form action="/admin" method="GET" style="display: inline;">
-                <a href="#" onclick="this.closest('form').submit();">Control Panel</a>
-            </form>
-            <a href="#"> View Event Request Form</a>
-            <form action="/maintainAdmin" method="GET" style="display: inline;">
-                <a href="#" onclick="this.closest('form').submit();">Manage Admins</a>
-            </form> -->
             <!-- Logout as an 'a' tag -->
             <form action="/logout" method="POST" style="display: inline;">
-                <a href="#" onclick="this.closest('form').submit();" style="color: rgb(212, 19, 19); text-decoration: none; padding: 10px; cursor: pointer;">Logout</a>
-            </form>
+                <a href="#" onclick="this.closest('form').submit();" class="logout-btn">Logout</a>
+            </form>            
         </nav>
     </header>
-   
  
         <!-- Function to capitalize first letter -->
         <%
@@ -107,8 +133,13 @@
                     <button type="submit">Manage Admins</button>
                 </form>
                 <br>
-                <form action="/createAdmin" method="GET">
-                    <button type="submit">Create New Admin</button>
+                <form action="/maintainTeamMember" method="GET">
+                    <button type="submit">Manage Team Members</button>
+                </form>
+                <br>
+                <br>
+                <form action="/maintainTeamMember" method="GET">
+                    <button type="submit" hidden>Manage Team Members</button>
                 </form>
             </div>
         </div>
@@ -125,33 +156,10 @@
                 <form action="/eventOrganizers" method="GET">
                     <button type="submit">View Event Organizers</button>
                 </form>
-            </div>
-        </div>
- 
-        <!-- Tableau Dashboard Section -->
-        <h1 style="text-align: center;">Dashboard</h1>
-        <div class="dashboard-container">
-            <div class='tableauPlaceholder' id='viz1733338362206'>
-                <noscript>
-                    <a href='#'><img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;In&#47;IntexDRAFT&#47;Dashboard1&#47;1_rss.png' style='border: none' /></a>
-                </noscript>
-                <object class='tableauViz' style='display:none;'>
-                    <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
-                    <param name='embed_code_version' value='3' />
-                    <param name='site_root' value='' />
-                    <param name='name' value='IntexDRAFT&#47;Dashboard1' />
-                    <param name='tabs' value='yes' />
-                    <param name='toolbar' value='yes' />
-                    <param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;In&#47;IntexDRAFT&#47;Dashboard1&#47;1.png' />
-                    <param name='animate_transition' value='yes' />
-                    <param name='display_static_image' value='yes' />
-                    <param name='display_spinner' value='yes' />
-                    <param name='display_overlay' value='yes' />
-                    <param name='display_count' value='yes' />
-                    <param name='language' value='en-US' />
-                    <param name='filter' value='publish=yes' />
-                    <param name='ignore_sticky_session' value='yes' />
-                </object>
+                <br>
+                <form action="/displayVolunteers" method="GET">
+                    <button type="submit">View Volunteers</button>
+                </form>
             </div>
         </div>
  
@@ -178,6 +186,13 @@
             vizElement.parentNode.insertBefore(scriptElement, vizElement);
         </script>
     </main>
+    <!-- Tableau Dashboard Section -->
+    <h1 style="text-align: center;">Dashboard</h1>
+    <div style="text-align: center; align-items: center; padding-left: 14%;">
+        <div class="dashboard-container">
+            <div class='tableauPlaceholder' id='viz1733435127393' style='position: relative'><noscript><a href='#'><img alt='Dashboard 1 ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;K5&#47;K5RY3HBKD&#47;1_rss.png' style='border: none' /></a></noscript><object class='tableauViz'  style='display:none;'><param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' /> <param name='embed_code_version' value='3' /> <param name='path' value='shared&#47;K5RY3HBKD' /> <param name='toolbar' value='yes' /><param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;K5&#47;K5RY3HBKD&#47;1.png' /> <param name='animate_transition' value='yes' /><param name='display_static_image' value='yes' /><param name='display_spinner' value='yes' /><param name='display_overlay' value='yes' /><param name='display_count' value='yes' /><param name='language' value='en-US' /><param name='filter' value='publish=yes' /></object></div>                <script type='text/javascript'>                    var divElement = document.getElementById('viz1733435127393');                    var vizElement = divElement.getElementsByTagName('object')[0];                    if ( divElement.offsetWidth > 800 ) { vizElement.style.width='1366px';vizElement.style.height='795px';} else if ( divElement.offsetWidth > 500 ) { vizElement.style.width='1366px';vizElement.style.height='795px';} else { vizElement.style.width='100%';vizElement.style.height='2127px';}                     var scriptElement = document.createElement('script');                    scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';                    vizElement.parentNode.insertBefore(scriptElement, vizElement);                </script>
+        </div>
+    </div>
     <br>
     <footer class="footer">
         <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
