@@ -665,7 +665,7 @@ app.get('/displayVolunteers', isAuthenticated, (req, res) => {
         });
 });
  
-app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
+app.get('/viewEvent/:eventid', (req, res) => {
     const eventid = req.params.eventid;
     knex('event')
         .join('schedule', 'event.eventid', '=', 'schedule.eventid')
@@ -674,6 +674,7 @@ app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
         .join('production', 'event.eventid', '=', 'production.eventid')
         .join('items', 'items.itemnum', '=', 'production.itemnum')
         .select(
+            'event.eventid',
             'event.eventname',
             'event.eventstatus',
             'organizer.firstname',
@@ -690,7 +691,7 @@ app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
             'event.estattendance',
             'event.numvoluntest',
             'event.participantsreal',
-            'event.volunteersreal',
+            'event.volunteersreal', 
             'production.itemnum',
             'production.numproduced',
             'items.itemname',
@@ -698,30 +699,32 @@ app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
             'event.activity',
             'organizer.organizerid',
             'event.locationid',
-            'production.productionid'
+            'production.productionid',
+            'items.itemname'
         )
         .where('event.eventid', eventid)
         .then(eventData => {
             if (!eventData || eventData.length === 0) {
                 return res.status(404).send('Event not found');
             }
- 
-            // Remove duplicates from schedule dates by mapping and then using Set to filter them
-            const scheduleDetails = eventData
-            .map(row => ({
-                event_date: row.event_date,
-                start_time: row.start_time,
-                end_time: row.end_time
-            }))
-            .filter((value, index, self) =>
-                index === self.findIndex((t) => (
-                    t.event_date === value.event_date &&
-                    t.start_time === value.start_time &&
-                    t.end_time === value.end_time
-                ))
-            );
- 
-            // Group production data by item name (itemtype) and remove duplicates for each item type
+
+            // Remove duplicates from schedule dates using a Set to ensure uniqueness
+            const scheduleDetails = [];
+            const seen = new Set();
+
+            eventData.forEach(row => {
+                const scheduleKey = `${row.event_date}-${row.start_time}-${row.end_time}`;
+                if (!seen.has(scheduleKey)) {
+                    seen.add(scheduleKey);
+                    scheduleDetails.push({
+                        event_date: row.event_date,
+                        start_time: row.start_time,
+                        end_time: row.end_time
+                    });
+                }
+            });
+
+            // Group production data by item name and ensure unique numproduced values for each item
             const itemProductions = eventData.reduce((acc, row) => {
                 if (!acc[row.itemname]) {
                     acc[row.itemname] = [];
@@ -731,13 +734,13 @@ app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
                 }
                 return acc;
             }, {});
- 
-            res.render('viewEvent', {
-                event: {
-                    ...eventData[0],
+
+            res.render('viewEvent', { 
+                event: { 
+                    ...eventData[0], 
                     itemProductions,
-                    scheduleDetails  // Pass the schedule details (date, start time, end time) to the template
-                }
+                    scheduleDetails  // Pass the unique schedule details to the template
+                } 
             });
         })
         .catch(error => {
@@ -746,7 +749,6 @@ app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
         });
 });
 
- 
 app.post('/viewEvent/:eventid', (req, res) => {
     const eventid = req.params.eventid;
     const eventname = req.body.eventname;
@@ -773,9 +775,9 @@ app.post('/viewEvent/:eventid', (req, res) => {
     itemnum.push(req.body.envelopes);
     itemnum.push(req.body.vestPiece);
     itemnum.push(req.body.completedProduct);
- 
+
     console.log(itemnum);
- 
+
     // Update the event in the database
     knex('event')
         .where('event.eventid', eventid)  // Ensure correct column and value
@@ -819,18 +821,24 @@ app.post('/viewEvent/:eventid', (req, res) => {
         .then(() => {
             // Step 4: Update the production table for each product
             let updates = []; // Array to hold all promises
+        
+            // Iterate over the item numbers (1 through 5)
             for (let iCount = 0; iCount < 5; iCount++) {
                 let iNum = iCount + 1;
+                
+                // Ensure that if itemnum is empty, it defaults to 0
+                let numProduced = itemnum[iCount] === '' || itemnum[iCount] === undefined || itemnum[iCount] === null ? 0 : itemnum[iCount];
+        
                 updates.push(
                     knex('production')
                         .where('production.eventid', eventid)
                         .andWhere('production.itemnum', iNum)
                         .update({
-                            numproduced: itemnum[iCount]
+                            numproduced: numProduced
                         })
                 );
             }
- 
+        
             // Wait for all updates to complete
             return Promise.all(updates)
                 .then(() => {
@@ -839,7 +847,8 @@ app.post('/viewEvent/:eventid', (req, res) => {
                 .catch(err => {
                     console.error('Error updating rows:', err);
                 });
-        })         
+        })
+             
         .then(() => {
             
             res.redirect('/displayEvents'); // Redirect after successful update
@@ -847,7 +856,8 @@ app.post('/viewEvent/:eventid', (req, res) => {
         .catch(error => {
             console.error('Error updating Event:', error);
             res.status(500).send('Internal Server Error');
-        });     
+        });
+        
 });
 
 //Deletes event
