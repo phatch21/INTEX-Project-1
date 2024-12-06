@@ -168,32 +168,47 @@
       <input type="number" id="volunteersreal" name="volunteersreal" value="<%= event.volunteersreal %>">
     
       <!-- Produced Items Fields -->
-      <div id="producedItemsSection">
+    <div id="producedItemsSection">
         <label for="pockets">Pockets Produced</label>
-        <input min="1" type="number" id="pockets" name="pockets" value="<%= event.itemProductions.Pockets %>" >
-      
+        <input min="1" type="number" id="pockets" name="pockets" value="<%= event.itemProductions?.Pockets || 0 %>">
+    
         <label for="collars">Collars Produced</label>
-        <input min="1" type="number" id="collars" name="collars" value="<%= event.itemProductions.Collars %>" >
-      
+        <input min="1" type="number" id="collars" name="collars" value="<%= event.itemProductions?.Collars || 0 %>">
+    
         <label for="envelopes">Envelopes Produced</label>
-        <input min="1" type="number" id="envelopes" name="envelopes" value="<%= event.itemProductions.Envelopes %>" >
-      
+        <input min="1" type="number" id="envelopes" name="envelopes" value="<%= event.itemProductions?.Envelopes || 0 %>">
+    
         <label for="vestPiece">Vest Piece Produced</label>
-        <input min="1" type="number" id="vestPiece" name="vestPiece" value="<%= event.itemProductions.VestPiece %>" >
-      
+        <input min="1" type="number" id="vestPiece" name="vestPiece" value="<%= event.itemProductions?.VestPiece || 0 %>">
+    
         <label for="completedProduct">Completed Product Produced</label>
-        <input min="1" type="number" id="completedProduct" name="completedProduct" value="<%= event.itemProductions.CompletedProduct %>" >
-
-        <input id="itemnum" name="itemnum" value="<%= event.itemnum %>" hidden>
-      </div>
+        <input min="1" type="number" id="completedProduct" name="completedProduct" value="<%= event.itemProductions?.CompletedProduct || 0 %>">
+    
+        <input id="itemnum" name="itemnum" value="<%= event?.itemnum || '' %>" hidden>
+    </div>
+    
       
     </div>
         <!-- Event Status -->
         <label for="eventstatus">Event Status</label>
-        <select id="eventstatus" name="eventstatus" onchange="toggleAdditionalFields()" >
-          <option value="Requested" <%= event.eventstatus === 'Requested' ? 'selected' : '' %>>Requested</option>
-          <option value="Approved" <%= event.eventstatus === 'Approved' ? 'selected' : '' %>>Approved</option>
-          <option value="Complete" <%= event.eventstatus === 'Complete' ? 'selected' : '' %>>Complete</option>
+        <select id="eventstatus" name="eventstatus" onchange="toggleVolunteerInput()">
+        <% if (event.eventstatus === 'requested') { %>
+            <option value="requested" selected>Requested</option>
+        <% } else { %>
+            <option value="requested">Requested</option>
+        <% } %>
+        
+        <% if (event.eventstatus === 'approved') { %>
+            <option value="approved" selected>Approved</option>
+        <% } else { %>
+            <option value="approved">Approved</option>
+        <% } %>
+        
+        <% if (event.eventstatus === 'complete') { %>
+            <option value="complete" selected>Complete</option>
+        <% } else { %>
+            <option value="complete">Complete</option>
+        <% } %>      
         </select>
 
     <!-- Submit Button -->

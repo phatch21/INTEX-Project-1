@@ -66,21 +66,25 @@
         <input type="text" id="heardhow" name="heardhow" placeholder="Social media, friend, etc." required>
 
         <div class="checkbox-container">
-            <label for="cansew">Do you know how to sew? Yes or No 
+            <label for="cansew">Do you know how to sew? (Check the box for 'Yes')
             <input type="checkbox" id="cansew" name="cansew" onchange="toggleTeachCheckbox()" value="true">
             </label>
 
+            <label for="willlead">Are you willing a group? (Check the box for 'Yes')
+                <input type="checkbox" id="willlead" name="willlead" onchange="toggleTeachCheckbox()" value="true">
+                </label>
+
             <div id="teach-container" class="hidden">
-                <label for="willteach">Would you be willing to teach others how to sew? Yes or No 
+                <label for="willteach">Would you be willing to teach others how to sew? (Check the box for 'Yes') 
                 <input type="checkbox" id="willteach" name="willteach" value="true">
                 </label>
             </div>
 
-            <label for="havemachine">Do you own a sewing machine and can bring it to events? <br>Yes or No 
+            <label for="havemachine">Do you own a sewing machine and can bring it to events? (Check the box for 'Yes') 
             <input type="checkbox" id="havemachine" name="havemachine" value="true">
             </label>
         </div>
-        
+        <br>
         <button type="submit" class="lead-button">Submit</button>
     </form>
     <script src="hamburger.js"></script>

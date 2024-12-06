@@ -1,0 +1,9 @@
+logs/
+temp/
+
+# Exclude all folders named "node_modules" in the project
+node_modules/
+
+# Exclude files or folders with specific extensions
+*.log
+*.tmp

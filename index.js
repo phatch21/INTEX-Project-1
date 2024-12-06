@@ -7,11 +7,11 @@ const app = express();
 let path = require("path");
 const port = process.env.PORT || 3000;
 
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
-
 // Serve static files from the 'public' directory
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -92,7 +92,7 @@ app.post('/login', async (req, res) => {
                 secret: admin.secret, // TOTP secret stored in the database
                 encoding: 'base32',
                 token, // The TOTP token provided by the user
-                window: 1, // Allow for slight clock drift
+                window: 5, // Allow for slight clock drift (set to 1 when not in testing)
             });
 
             if (!isTokenValid) {
@@ -136,8 +136,9 @@ app.post('/logout', (req, res) => {
 });
 
 // Route to generate a TOTP secret
-app.get('/generate-secret', (req, res) => {
-    res.render('generate-secret');
+app.get('/generate-secret', isAuthenticated, (req, res) => {
+    const result = {secret : ""};
+    res.render('generate-secret', { result });
 });
 
 app.post('/generate-secret', async (req, res) => {
@@ -160,9 +161,8 @@ app.post('/generate-secret', async (req, res) => {
             return res.status(404).json({ error: "No secret found for the provided username." });
         }
 
-        console.log("Secret fetched from database:", result.secret);
+        res.render('generate-secret', { result });
 
-        res.json({ secret: result.secret });
     } catch (error) {
         console.error('Error fetching secret:', error);
         res.status(500).json({ error: 'Failed to fetch TOTP secret.' });
@@ -236,6 +236,56 @@ app.get('/maintainAdmin', isAuthenticated, (req, res) => {
         });
 });
 
+app.get('/createTeamMember', isAuthenticated, (req, res) => {
+    res.render('createTeamMember');
+});
+
+app.post('/createTeamMember', async (req, res) => {
+    try {
+        // Insert new team member into the database
+        await knex("teammember").insert({
+            firstname: req.body.fname.toUpperCase(),
+            lastname: req.body.lname.toUpperCase(),
+            phone: req.body.phone,
+            email: req.body.email,
+            address: req.body.address,
+            city: req.body.city,
+            state: req.body.state,
+            zip: req.body.zip
+        });
+
+        // Redirect to the admin control panel
+        res.redirect('/admin');
+    } catch (err) {
+        console.error('Database Error:', err);
+        res.status(500).json({ error: 'Failed to insert admin into database.' });
+    }
+});
+
+app.get('/maintainTeamMember', isAuthenticated, (req, res) => {
+    knex('teammember')
+        .select(
+            'teammemberid',
+            'firstname',
+            'lastname',
+            'phone',
+            'email',
+            'address',
+            'city',
+            'state',
+            'zip'
+        )
+        //returns all the records as an ARRAY of ROWS
+        .then(teammembers => {
+            // Render the index.ejs template and pass the data
+            res.render('maintainTeamMember', { teammembers });
+        })
+        .catch(error => {
+        console.error('Error querying database:', error);
+        res.status(500).send('Internal Server Error');
+        });
+});
+
 app.get('/addVolunteer', (req, res) => {
     res.render('volunteerSignup');
 });
@@ -249,6 +299,7 @@ app.post('/addVolunteer', (req, res) => {
     const willinghours = req.body.willinghours;
     const heardhow = req.body.heardhow;
     const cansew = req.body.cansew === 'true';
+    const willlead = req.body.willlead === 'true';
     const willteach = req.body.willteach === 'true';
     const havemachine = req.body.havemachine === 'true';
     knex('volunteer')
@@ -260,6 +311,7 @@ app.post('/addVolunteer', (req, res) => {
         willinghours: willinghours,
         heardhow: heardhow,
         cansew: cansew,
+        willlead: willlead,
         willteach: willteach,
         havemachine: havemachine,
     })
@@ -271,9 +323,7 @@ app.post('/addVolunteer', (req, res) => {
         res.status(500).send('Internal Server Error');
     });
 });
-app.get('/faqs', (req, res) => {
-    res.render('faqs');
-});
+
 // Gets the event request page
 app.get('/eventRequest', (req, res) => {
     res.render('eventRequest');
@@ -281,19 +331,19 @@ app.get('/eventRequest', (req, res) => {
 
 // Posts the event request page to the database
 app.post('/eventRequest', async (req, res) => {
-    const fname = req.body.fname
-    const lname = req.body.lname
-    const email = req.body.email
-    const phone = req.body.phone
-    const address = req.body.address
-    const city = req.body.city
-    const state = req.body.state
-    const zip = req.body.zip
-    const eventname = req.body.eventname
-    const activity = req.body.activity
+    const fname = req.body.fname;
+    const lname = req.body.lname;
+    const email = req.body.email;
+    const phone = req.body.phone;
+    const address = req.body.address;
+    const city = req.body.city;
+    const state = req.body.state;
+    const zip = req.body.zip;
+    const eventname = req.body.eventname;
+    const activity = req.body.activity;
     const jenstory = req.body.jenstory
-    const estattendance = req.body.estattendance
-    const numDates = req.body.numDates
+    const estattendance = req.body.estNumAttendance;
+    const numDates = req.body.numDates;
 
     try {
         // Step 1: Check if the organizer already exists, return organizerid
@@ -321,16 +371,20 @@ app.post('/eventRequest', async (req, res) => {
         let locationId;
     
         if (!location) {
-            // Insert new location and retrieve locationid
-            const [newLocation] = await knex('location')
-                .insert({
-                    address: address,
-                    city: city,
-                    state: state,
-                    zip: zip
-                })
-                .returning('locationid'); // Returns an array of the inserted rows
-            locationId = newLocation;
+            // Insert new location
+            await knex('location').insert({
+                address: address,
+                city: city,
+                state: state,
+                zip: zip
+            });
+        
+            // Fetch the location ID of the newly inserted row
+            const newLocation = await knex('location')
+                .where({ address, city, state, zip })
+                .first();
+        
+            locationId = newLocation?.locationid;        
         } else {
             // Existing location found
             locationId = location.locationid;
@@ -345,12 +399,23 @@ app.post('/eventRequest', async (req, res) => {
                 eventstatus: 'Requested',
                 activity: activity,
                 jenstory: jenstory,
-                estattendance: estattendance || 0,
+                estattendance: estattendance,
                 numvoluntest: 0,
                 participantsreal: null,
                 volunteersreal: null,
             })
             .returning('eventid');
+
+        // Step 4: Create an entry for the production table
+        for (let i = 1; i <= 5; i++) {
+            await knex('production')
+                .insert({
+                    eventid: eventId.eventid,
+                    itemnum: i,
+                    numproduced: 0,
+                })
+                .returning('eventid');
+            }
     
         // Step 4: Insert into the "schedule" table for multiple dates
         for (let i = 1; i <= numDates; i++) {
@@ -474,6 +539,75 @@ app.post('/deleteAdmin/:admin_id', (req, res) => {
     });
 });
 
+//get info from databse so it shows up when edit is clicked
+app.get('/editTeamMember/:teammemberid', isAuthenticated, (req, res) => {
+    const teammemberid = req.params.teammemberid;
+    if (isNaN(teammemberid)) {
+        return res.status(400).send('Invalid team member ID');
+    }
+    knex('teammember')
+        .where('teammemberid', teammemberid)
+        .first()
+        .then(teammember => {
+            if (!teammember) {
+                return res.status(404).send('Team Member not found');
+            }
+            res.render('editTeamMember', { teammember });
+        })
+        .catch(error => {
+            console.error('Error querying database:', error);
+            res.status(500).send('Internal Server Error');
+        });
+});
+
+//Replaced info in admin table w/edits
+app.post('/editTeamMember/:teammemberid', (req, res) => {
+    const teammemberid = req.params.teammemberid
+    const email = req.body.email;
+    const fname = req.body.fname.toUpperCase();
+    const lname = req.body.lname.toUpperCase();
+    const phone = req.body.phone;
+    const address = req.body.address;
+    const city = req.body.city;
+    const state = req.body.state;
+    const zip = req.body.zip;
+
+    knex('teammember')
+        .where('teammemberid', teammemberid)
+        .first()
+        .update({
+        firstname: fname,
+        lastname: lname,
+        email: email,
+        phone: phone,
+        address: address,
+        city: city,
+        state: state,
+        zip: zip
+        })
+        .then(() => {
+        res.redirect('/maintainTeamMember'); // Redirect to the list of Team Members after saving
+        })
+        .catch(error => {
+        console.error('Error updating Team Member:', error);
+        res.status(500).send('Internal Server Error');
+    });
+});
+
+//Deletes team member
+app.post('/deleteTeamMember/:teammemberid', (req, res) => {
+    const teammemberid = req.params.teammemberid;
+    knex('teammember')
+            .where('teammemberid', teammemberid)
+            .del() // Deletes the record with the specified ID
+            .then(() => {
+            res.redirect('/maintainTeamMember'); // Redirect to the maintainAdmin list after deletion
+        }).catch(error => {
+            console.error('Error deleting Team Member:', error);
+            res.status(500).send('Internal Server Error');
+    });
+});
+
 app.get('/displayEvents', isAuthenticated, (req, res) => {
     knex('event')
         .select(
@@ -491,83 +625,26 @@ app.get('/displayEvents', isAuthenticated, (req, res) => {
             res.status(500).send('Internal Server Error');
         });
 });
- 
-app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
-    const eventid = req.params.eventid;
-    knex('event')
-        .join('schedule', 'event.eventid', '=', 'schedule.eventid')
-        .join('location', 'event.locationid', '=', 'location.locationid')
-        .join('organizer', 'event.organizerid', '=', 'organizer.organizerid')
-        .join('production', 'event.eventid', '=', 'production.eventid')
-        .join('items', 'items.itemnum', '=', 'production.itemnum')
+
+app.get('/displayVolunteers', isAuthenticated, (req, res) => {
+    knex('volunteer')
         .select(
-            'event.eventid',
-            'event.eventname',
-            'event.eventstatus',
-            'organizer.firstname',
-            'organizer.lastname',
-            'organizer.phone',
-            'organizer.email',
-            'schedule.event_date',
-            'schedule.start_time',
-            'schedule.end_time',
-            'location.address',
-            'location.city',
-            'location.state',
-            'location.zip',
-            'event.estattendance',
-            'event.numvoluntest',
-            'event.participantsreal',
-            'event.volunteersreal',
-            'production.itemnum',
-            'production.numproduced',
-            'items.itemname',
-            'event.jenstory',
-            'event.activity',
-            'organizer.organizerid',
-            'event.locationid',
-            'production.productionid',
-            'items.itemname'
+            'volunteerid',
+            'firstname',
+            'lastname',
+            'email',
+            'phone',
+            'willinghours',
+            'heardhow',
+            'cansew',
+            'willlead',
+            'willteach',
+            'havemachine'
         )
-        .where('event.eventid', eventid)
-        .then(eventData => {
-            if (!eventData || eventData.length === 0) {
-                return res.status(404).send('Event not found');
-            }
- 
-            // Remove duplicates from schedule dates by mapping and then using Set to filter them
-            const scheduleDetails = eventData
-            .map(row => ({
-                event_date: row.event_date,
-                start_time: row.start_time,
-                end_time: row.end_time
-            }))
-            .filter((value, index, self) =>
-                index === self.findIndex((t) => (
-                    t.event_date === value.event_date &&
-                    t.start_time === value.start_time &&
-                    t.end_time === value.end_time
-                ))
-            );
- 
-            // Group production data by item name (itemtype) and remove duplicates for each item type
-            const itemProductions = eventData.reduce((acc, row) => {
-                if (!acc[row.itemname]) {
-                    acc[row.itemname] = [];
-                }
-                if (!acc[row.itemname].includes(row.numproduced)) {
-                    acc[row.itemname].push(row.numproduced);
-                }
-                return acc;
-            }, {});
- 
-            res.render('viewEvent', {
-                event: {
-                    ...eventData[0],
-                    itemProductions,
-                    scheduleDetails  // Pass the schedule details (date, start time, end time) to the template
-                }
-            });
+        //renders index.js
+        .then(volunteer => {
+            // Render the index.ejs template and pass the data
+            res.render('displayVolunteers', { volunteer });
         })
         .catch(error => {
             console.error('Error querying database:', error);
@@ -575,7 +652,55 @@ app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
         });
 });
  
- 
+app.get('/viewEvent/:eventid', async (req, res) => {
+    const eventId = req.params.eventid;
+
+    try {
+        // Query the database for event details
+        const eventData = await knex('event')
+            .join('schedule', 'event.eventid', '=', 'schedule.eventid')
+            .join('location', 'event.locationid', '=', 'location.locationid')
+            .join('organizer', 'event.organizerid', '=', 'organizer.organizerid')
+            .select(
+                'event.*',
+                'schedule.event_date',
+                'schedule.start_time',
+                'schedule.end_time',
+                'location.address',
+                'location.city',
+                'location.state',
+                'location.zip',
+                'organizer.firstname',
+                'organizer.lastname',
+                'organizer.phone',
+                'organizer.email'
+            )
+            .where('event.eventid', eventId);
+
+        if (!eventData || eventData.length === 0) {
+            return res.status(404).send('Event not found');
+        }
+
+        // Extract and format schedule details
+        const scheduleDetails = eventData.map(row => ({
+            event_date: row.event_date,
+            start_time: row.start_time,
+            end_time: row.end_time,
+        }));
+
+        // Pass the data to the view
+        res.render('viewEvent', {
+            event: {
+                ...eventData[0], // Pass the first row of event details
+                scheduleDetails, // Include schedule details
+            },
+        });
+    } catch (error) {
+        console.error('Error querying database:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
  
 app.post('/viewEvent/:eventid', (req, res) => {
     const eventid = req.params.eventid;
@@ -680,6 +805,32 @@ app.post('/viewEvent/:eventid', (req, res) => {
         });     
 });
 
+//Deletes event
+app.post('/deleteEvent/:eventid', async (req, res) => {
+    const eventid = req.params.eventid;
+
+    try {
+        // Execute all deletions in parallel
+        await Promise.all([
+            knex('schedule').where('eventid', eventid).del(),
+            knex('eventvolunteers').where('eventid', eventid).del(),
+            knex('production').where('eventid', eventid).del(),
+            knex('teamevent').where('eventid', eventid).del(),
+        ]);
+
+        // Delete the main event record after related records
+        await knex('event').where('eventid', eventid).del();
+
+        // Send a single response after all operations are successful
+        res.redirect('/displayEvents');
+    } catch (error) {
+        console.error('Error deleting event:', error);
+
+        // Send an error response if something fails
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 app.get('/jensStory', (req, res) => {
     res.render('jensStory');
 });
@@ -698,6 +849,39 @@ app.get('/sponsors', (req, res) => {
 
 app.get('/donations', (req, res) => {
     res.render('donations');
+});
+
+app.get('/distribution', (req, res) => {
+    res.render('distribution')
+});
+
+app.post('/distribution', async (req, res) => {
+    const eventDate = req.body.eventDate;
+    const fname = req.body.firstname.toUpperCase();
+    const lname = req.body.lastname.toUpperCase();
+    const email = req.body.email;
+    const city = req.body.city;
+    const state = req.body.state;
+    const size = req.body.size;
+    const gender = req.body.gender;
+
+    console.log(gender, size);
+
+    await knex("distribution").insert({
+        receiverfirstname: fname,
+        receiverlastname: lname,
+        location: city,
+        state: state, // Store the hashed password
+        date: eventDate, // Store the TOTP secret
+        size: size,
+        gender: gender
+    }).then(() => {
+        res.redirect('/distribution'); // Redirect after successful update
+    })
+    .catch(error => {
+        console.error('Error updating distribution:', error);
+        res.status(500).send('Internal Server Error');
+    });     
 });
 
 // Start the server
