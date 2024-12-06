@@ -4,13 +4,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const dropdownMenu = document.getElementById('dropdown-menu');
 
     const toggleDropdown = () => {
-        if (window.innerWidth <= 768) {
+        if (window.innerWidth <= 820) {
             dropdownMenu.classList.toggle('hidden');
         }
     };
 
     const resetDropdown = () => {
-        if (window.innerWidth > 768) {
+        if (window.innerWidth > 820) {
             dropdownMenu.classList.add('hidden'); // Ensure dropdown is hidden
         }
     };
