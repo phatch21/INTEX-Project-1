@@ -602,7 +602,7 @@ html, body {
   border-radius: 50%;
   cursor: pointer;
   transition: left 0.3s ease;
-  opacity: 50;
+  opacity: 70%;
 }
 
 .sidebar.collapsed {
