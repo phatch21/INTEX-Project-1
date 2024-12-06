@@ -10,6 +10,6 @@
   -type /admin after the URL to reach the admin sign-in page
   -click the top left logo any time to return to the home page
 - **LOGIN INFO**:
-  -USERNAME: test
-  -PASSWORD: test
-  -dual authentification: downlaod the xyz app
+  -USERNAME: blah
+  -PASSWORD: blah
+  -TOTP AUTH: Just enter 123456. The 'blah' admin is the only admin capable of circumventing the TOTP Authentication. Please refer to our video for a demonstration of our functional 2-Factor Authentication.
