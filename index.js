@@ -665,53 +665,85 @@ app.get('/displayVolunteers', isAuthenticated, (req, res) => {
         });
 });
  
-app.get('/viewEvent/:eventid', async (req, res) => {
-    const eventId = req.params.eventid;
-
-    try {
-        // Query the database for event details
-        const eventData = await knex('event')
-            .join('schedule', 'event.eventid', '=', 'schedule.eventid')
-            .join('location', 'event.locationid', '=', 'location.locationid')
-            .join('organizer', 'event.organizerid', '=', 'organizer.organizerid')
-            .select(
-                'event.*',
-                'schedule.event_date',
-                'schedule.start_time',
-                'schedule.end_time',
-                'location.address',
-                'location.city',
-                'location.state',
-                'location.zip',
-                'organizer.firstname',
-                'organizer.lastname',
-                'organizer.phone',
-                'organizer.email'
-            )
-            .where('event.eventid', eventId);
-
-        if (!eventData || eventData.length === 0) {
-            return res.status(404).send('Event not found');
-        }
-
-        // Extract and format schedule details
-        const scheduleDetails = eventData.map(row => ({
-            event_date: row.event_date,
-            start_time: row.start_time,
-            end_time: row.end_time,
-        }));
-
-        // Pass the data to the view
-        res.render('viewEvent', {
-            event: {
-                ...eventData[0], // Pass the first row of event details
-                scheduleDetails, // Include schedule details
-            },
+app.get('/viewEvent/:eventid([1-9][0-9]{0,5}|1000000)', (req, res) => {
+    const eventid = req.params.eventid;
+    knex('event')
+        .join('schedule', 'event.eventid', '=', 'schedule.eventid')
+        .join('location', 'event.locationid', '=', 'location.locationid')
+        .join('organizer', 'event.organizerid', '=', 'organizer.organizerid')
+        .join('production', 'event.eventid', '=', 'production.eventid')
+        .join('items', 'items.itemnum', '=', 'production.itemnum')
+        .select(
+            'event.eventname',
+            'event.eventstatus',
+            'organizer.firstname',
+            'organizer.lastname',
+            'organizer.phone',
+            'organizer.email',
+            'schedule.event_date',
+            'schedule.start_time',
+            'schedule.end_time',
+            'location.address',
+            'location.city',
+            'location.state',
+            'location.zip',
+            'event.estattendance',
+            'event.numvoluntest',
+            'event.participantsreal',
+            'event.volunteersreal',
+            'production.itemnum',
+            'production.numproduced',
+            'items.itemname',
+            'event.jenstory',
+            'event.activity',
+            'organizer.organizerid',
+            'event.locationid',
+            'production.productionid'
+        )
+        .where('event.eventid', eventid)
+        .then(eventData => {
+            if (!eventData || eventData.length === 0) {
+                return res.status(404).send('Event not found');
+            }
+ 
+            // Remove duplicates from schedule dates by mapping and then using Set to filter them
+            const scheduleDetails = eventData
+            .map(row => ({
+                event_date: row.event_date,
+                start_time: row.start_time,
+                end_time: row.end_time
+            }))
+            .filter((value, index, self) =>
+                index === self.findIndex((t) => (
+                    t.event_date === value.event_date &&
+                    t.start_time === value.start_time &&
+                    t.end_time === value.end_time
+                ))
+            );
+ 
+            // Group production data by item name (itemtype) and remove duplicates for each item type
+            const itemProductions = eventData.reduce((acc, row) => {
+                if (!acc[row.itemname]) {
+                    acc[row.itemname] = [];
+                }
+                if (!acc[row.itemname].includes(row.numproduced)) {
+                    acc[row.itemname].push(row.numproduced);
+                }
+                return acc;
+            }, {});
+ 
+            res.render('viewEvent', {
+                event: {
+                    ...eventData[0],
+                    itemProductions,
+                    scheduleDetails  // Pass the schedule details (date, start time, end time) to the template
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error querying database:', error);
+            res.status(500).send('Internal Server Error');
         });
-    } catch (error) {
-        console.error('Error querying database:', error);
-        res.status(500).send('Internal Server Error');
-    }
 });
 
  
