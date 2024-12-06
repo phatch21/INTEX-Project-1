@@ -1,0 +1,236 @@
+/* Reset and Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  font-family: Arial, sans-serif;
+  color: #333;
+  height: 100%;
+  background-color: #ffffff; /* Unified background color */
+}
+
+/* Ensure body content starts below the header */
+body {
+  margin: 0;
+  padding: 0;
+}
+
+/* Navigation Bar */
+.navbar {
+  display: flex;
+  align-items: center; /* Align items vertically */
+  justify-content: space-between; /* Space between logo and links */
+  position: sticky; /* Keep navbar at the top */
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: #f4f4f4; /* Unified navbar background */
+  border-bottom: 1px solid #ccc;
+  padding: 10px 20px;
+  z-index: 1000; /* Ensure it stays above other content */
+}
+
+.logo {
+  font-size: 1rem;
+  font-weight: bold;
+  object-fit: contain;
+  max-height: 100%; /* Fit logo height */
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333;
+  margin: 0 10px;
+  font-size: 1rem;
+}
+
+.nav-links a:hover {
+  color: #1c8e00;
+}
+
+/* Parent container for the divs */
+.side-by-side {
+  display: flex;
+  justify-content: space-around; /* Space divs evenly */
+  align-items: stretch;
+  gap: 0px;
+}
+
+/* Individual content boxes */
+.content-box {
+  position: relative; /* Enable positioning inside the div */
+  display: flex;
+  flex-direction: column; /* Stack text and button vertically */
+  justify-content: space-between;
+  text-align: center; /* Center the text */
+  padding: 20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 40vh;
+  width: 100vh;
+}
+
+.content-box p {
+  margin: 0; /* Remove default margin */
+  font-size: 16px;
+  color: #333;
+}
+
+.content-box a {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  text-decoration: none;
+  background-color: #1c8e00;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.content-box a:hover {
+  background-color: #0056b3;
+}
+
+/* Lead Section */
+.lead-section {
+  height: calc(50vh - 60px); /* Adjust for nav height */
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  color: white;
+  position: relative;
+  padding-top: 60px; /* Offset for fixed nav */
+}
+
+.lead-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3); /* Overlay effect */
+}
+
+.lead-content {
+  position: relative;
+  z-index: 10;
+}
+
+.lead-content h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+}
+
+.lead-content p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+.lead-button {
+  background: #1c8e00; /* Unified button color */
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.lead-button:hover {
+  background-color: #156b00;
+}
+
+/* Footer */
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  background: #f8f8f8;
+  text-align: center;
+  padding: 25px;
+  border-top: 1px solid #ccc;
+}
+
+/* Form Styling */
+.form-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #f4f4f4;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+  text-align: center;
+  color: #333;
+}
+
+label {
+  font-weight: bold;
+  margin-top: 1rem;
+  display: block;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.75rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Checkbox Container */
+.checkbox-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input[type="checkbox"] {
+  margin-right: 0.5rem;
+}
+
+/* Hidden Elements */
+.hidden {
+  display: none;
+}
+
+#teach-container {
+  display: none;
+  margin-left: 20px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .nav-links a {
+    font-size: 0.9rem;
+  }
+
+  .lead-content h1 {
+    font-size: 2rem;
+  }
+
+  .lead-content p {
+    font-size: 1rem;
+  }
+
+  .lead-button {
+    font-size: 0.9rem;
+    padding: 8px 16px;
+  }
+}

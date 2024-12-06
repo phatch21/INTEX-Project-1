@@ -1,11 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Landing Page</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="logo2.png" type="image/png">
 </head>
 <body>
-    <p>Update this page</p>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <a class="logo" href='/'>
+      <img src="logo2.png" alt="Logo">
+    <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
+  </a>
+    <nav class="nav-links">
+      <a href="/jensStory">JEN'S STORY</a>
+      <a href="/sponsors">SPONSORS</a>
+      <a href="/about">ABOUT</a>
+      <a href="/donations">DONATIONS</a>
+    </nav>
+    <div class="hamburger-icon" id="hamburger-icon">
+      ☰
+    </div>
+  </header>
+  <div id="dropdown-menu" class="dropdown hidden">
+    <a href="/jensStory">JEN'S STORY</a>
+    <a href="/sponsors">SPONSORS</a>
+    <a href="/about">ABOUT</a>
+    <a href="/donations">DONATIONS</a>
+  </div>
+  
+  <div class="story-page">
+    <div class="image-left">
+        <figure>
+            <img src="hj.jpg" alt="Homeless Jesus Sculpture" class="full-width-image">
+            <figcaption style="text-align: left;">(*To read more about the “Homeless Jesus Sculpture” click <a href="https://nwcatholic.org/news/susan-gilmore/seattle-s-homeless-jesus-sculpture-is-reminder-to-care-for-the-marginalized">Here</a>)</figcaption>
+        </figure>
+    </div>
+    
+    <p>Each $30 tax-deductible donation to the Turtle Shelter Project will provide a high tech foam vest for a youth or adult experiencing homelessness.  You can tell us where you would like the vest or vests sent to, or we will send them to where there is the greatest need.</p>
+    <br><br>
+    <p>The Turtle Shelter Project is a <a href="501c3.pdf">501 (c)(3) non-profit, EIN 82-1035303.</a></p>
+    
+    <div></div>
+    <h3>You can mail a check to:</h3>
+    <p>Turtle Shelter Project <br>
+        PO Box 382 <br>
+        Kaysville, Utah 84037</p>
+
+    <h3>Or donate securely online:</h3>
+    <br>
+    <a href="https://turtleshelterproject.org/checkout/donate?donatePageId=5b6a44c588251b72932df5a0" style="margin-top: auto; text-decoration: none; padding: 10px 20px; font-size: 1rem; font-weight: bold; background-color: #5cb85c; color: white; border-radius: 4px; display: inline-block;">
+          Donate Today!
+    </a>
+</div>
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2024 Turtle Shelter Project. All rights reserved.</p>
+    <br>
+    <p>PO Box 382, Kaysville, UT 84037 -- 801-872-3190 -- <a href="mailto:turtleshelterproject@gmail.com">turtleshelterproject@gmail.com</a></p>
+  </footer>
+  
+  <script src="hamburger.js"></script>
+  
 </body>
 </html>

@@ -38,27 +38,36 @@
 </head>
 <body>
   <script src="hamburger.js"></script>
-
-  <!-- Navigation Bar -->
+      <!-- Navigation Bar -->
   <header class="navbar">
-    <a class="logo" href="/">
+    <a class="logo" href='/'>
       <img src="logo2.png" alt="Logo">
-      <div><span>TURTLE SHELTER<br>PROJECT</span></div>
-    </a>
+    <div class="logo" style="text-decoration: none;"><span style="color: #333;">TURTLE SHELTER<br>PROJECT</span></div>
+  </a>
     <nav class="nav-links">
-      <a href="/jensStory">Jen's Story</a>
-      <a href="/sponsors">Sponsors</a>
-      <a href="/about">About</a>
-      <a href="/donations">Donations</a>
+      <a href="/jensStory">JEN'S STORY</a>
+      <a href="/sponsors">SPONSORS</a>
+      <a href="/about">ABOUT</a>
+      <a href="/donations">DONATIONS</a>
     </nav>
-    <div class="hamburger-icon" id="hamburger-icon">☰</div>
-  </header>
-  <div class="container">
-    <div class="sidebar">
-      <a href="/tech">Why Turtle Shelter Project?</a>
-      <a href="/vestsDistributed">Vests Distributed</a>
-      <a href="/faqs">FAQs</a>
+    <div class="hamburger-icon" id="hamburger-icon">
+      ☰
     </div>
+  </header>
+  <div id="dropdown-menu" class="dropdown hidden">
+    <a href="/jensStory">JEN'S STORY</a>
+    <a href="/sponsors">SPONSORS</a>
+    <a href="/about">ABOUT</a>
+    <a href="/donations">DONATIONS</a>
+  </div>
+
+  <div id="sidebar" class="sidebar">
+    <a href="/about">Why Turtle Shelter Project?</a>
+    <a href="/vestsDistributed">Vests Distributed</a>
+    <a href="/faqs">FAQs</a>
+  </div>
+  <button id="toggle-btn" class="toggle-btn">⮜</button>
+  </div>
     <div class="content">
       <!-- Main content -->
       <br>
