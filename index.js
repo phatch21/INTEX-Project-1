@@ -36,9 +36,9 @@ function isAuthenticated(req, res, next) {
 const knex = require("knex")({
     client: "pg", // Define the database client (PostgreSQL in this case).
     connection: { // Database connection details.
-        host: process.env.RDS_HOSTNAME || 'localhost',//"awseb-e-vfbtv3p32z-stack-awsebrdsdatabase-jjafz3q7a3js.cv2g6ywg6824.us-east-1.rds.amazonaws.com", 
+        host: process.env.RDS_HOSTNAME || 'localhost',//"alternativesite.rds.amazonaws.com", 
         user: process.env.RDS_USERNAME || "postgres", // PostgreSQL user with access to the database.
-        password: process.env.RDS_PASSWORD || 'matt3j145367',//"supersecretpassword", // Password for the PostgreSQL user.
+        password: process.env.RDS_PASSWORD || 'replace_password',//"supersecretpassword", // Password for the PostgreSQL user.
         database: process.env.RDS_DB_NAME || "ebdb", // Database name.
         port: process.env.RDS_PORT || 5432, // Default port for PostgreSQL.
         ssl: process.env.DB_SSL ? {rejectUnauthorized : false} : false
