@@ -4,7 +4,7 @@
 ## Payton Hatch, Spencer Bullock, Zach Katzenbach, Vin Jones
 
 ### Purpose of this repository
-- An example of an enterprise level application using Node.js. In this case, for The Turtle Shelter Project, an NPO for the creation and distribution of insulating vests to individuals experienceing homelessness (https://turtleshelterproject.org/).
+- An example of an enterprise level application using EJS/Node.js. In this case, for The Turtle Shelter Project, an NPO for the creation and distribution of insulating vests to individuals experienceing homelessness (https://turtleshelterproject.org/).
 
 ### Website
 - **URL**:
