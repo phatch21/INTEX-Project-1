@@ -5,8 +5,7 @@
 
 ### Website
 - **URL**:
-  - https://tsp.theaianalyst.net/
-  - (No longer active)
+  - https://tsp.theaianalyst.net/ (No longer active)
 - **NAVIGATE TO ADMIN PAGE**:
   -type /admin after the URL to reach the admin sign-in page
   -click the top left logo any time to return to the home page
